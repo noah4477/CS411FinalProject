@@ -50,7 +50,9 @@ services:
     image: neo4j:latest
     restart: always
     environment:
-      - NEO4J_AUTH=${NEO4J_Credentials}
+      NEO4J_AUTH: ${NEO4J_Credentials}
+    volumes:
+      - ./db/dbms:/data/dbms
     ports:
       - '7474:7474'
       - '7473:7473'
