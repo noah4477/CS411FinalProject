@@ -1,0 +1,126 @@
+import React from 'react';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import SearchIcon from '@material-ui/icons/Search';
+import InputBase from '@material-ui/core/InputBase';
+import { fade, withStyles,createMuiTheme  } from '@material-ui/core/styles';
+import SettingsIcon from '@material-ui/icons/Settings';
+import Button from '@material-ui/core/Button';
+import lightBlue from '@material-ui/core/colors/lightBlue';
+import grey from '@material-ui/core/colors/grey';
+import { withRouter } from 'react-router-dom';
+
+const theme = createMuiTheme({
+    palette: {
+      primary: grey,
+      secondary: lightBlue,
+    },
+  });
+
+const style = {
+    settings: {
+        position: 'absolute',
+        right: '0px'
+    },
+    SettingsIcon: {
+        color: 'white'
+    },
+    search: {
+        color: 'white',
+        position: 'relative',
+        borderRadius: theme.shape.borderRadius,
+        backgroundColor: fade(theme.palette.common.white, 0.15),
+        '&:hover': {
+          backgroundColor: fade(theme.palette.common.white, 0.25),
+        },
+        marginRight: theme.spacing(2),
+        marginLeft: 0,
+        [theme.breakpoints.up('sm')]: {
+          marginLeft: 'auto',
+          marginRight: 'auto',
+          width: '50vw',
+        },
+      },
+      searchIcon: {
+        padding: theme.spacing(0, 2),
+        height: '100%',
+        position: 'absolute',
+        pointerEvents: 'none',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
+      inputRoot: {
+        color: 'inherit',
+      },
+      inputInput: {
+        padding: theme.spacing(1, 1, 1, 0),
+        // vertical padding + font size from searchIcon
+        paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+        transition: theme.transitions.create('width'),
+        width: '100%',
+        [theme.breakpoints.up('md')]: {
+          width: '100%',
+        },
+      },
+
+    };
+
+
+
+
+
+class Header extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {searchTerm: ""};
+        this.submitForm = this.submitForm.bind(this);
+    }
+
+    submitForm(event) {
+        event.preventDefault();
+        this.props.history.push("/search?term=" +this.state.searchTerm);
+    }
+
+    render() {
+        const { classes } = this.props;
+        return (
+            <div>
+                <Toolbar style={{backgroundColor: 'grey'}}>
+                    <Typography style={{color: 'white'}} variant="h6" noWrap>
+                        IMDB Visualizer
+                    </Typography>
+                
+                    <div className={classes.search}>
+                        <form onSubmit= {this.submitForm}>
+                        <div className={classes.searchIcon}>
+                        <SearchIcon />
+                        </div>
+                        <InputBase
+                        placeholder="Search…"
+                        classes={{
+                            root: classes.inputRoot,
+                            input: classes.inputInput,
+                        }}
+                        inputProps={{ 'aria-label': 'search' }}
+                        onChange={(event) => { this.setState({ searchTerm: event.target.value }); }}
+                        value = {this.state.searchTerm}
+                        fullWidth 
+                        />
+                        </form>
+                    </div>
+                    <div className={classes.settings}>
+                        <Button >
+                            <SettingsIcon className={classes.SettingsIcon} />
+                        </Button>
+                    </div>
+                
+                
+
+                </Toolbar>
+            </div>
+        );
+    }
+}
+export default withStyles(style)(withRouter(Header));
