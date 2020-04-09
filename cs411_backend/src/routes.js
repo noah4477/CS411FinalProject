@@ -18,9 +18,10 @@ module.exports = function(app) {
                     return res.json({titles: result1, crew: result2});
                   });
             });
+            return;
         }
         else if(req.body.type === "Actors") {
-            query = `SELECT primaryName, nconst, knownForTitles from name_basics WHERE primaryName like "%${req.body.term}%" AND 'actor' in primaryProfession LIMIT ${return_limit}`;
+            query = `SELECT primaryName, nconst, knownForTitles from name_basics WHERE primaryName like "%${req.body.term}%" AND (primaryProfession LIKE '%actor%' OR primaryProfession LIKE '%actress%' ) LIMIT ${return_limit}`;
         }
         else if(req.body.type === "Movies") {
             query = `SELECT primarytitle, tconst, genres  from title_basics WHERE primarytitle like "%${req.body.term}%" AND titleType ="movie" LIMIT ${return_limit}`;
@@ -29,7 +30,7 @@ module.exports = function(app) {
             query = `SELECT primarytitle, tconst, genres  from title_basics WHERE primarytitle like "%${req.body.term}%" AND titleType in ('tvepisode', 'tvseries') LIMIT ${return_limit}`;
         }
         else if(req.body.type === "Directors") {
-            query = `SELECT primaryName, nconst, knownForTitles from name_basics WHERE primaryName like "%${req.body.term}%" AND 'director' in primaryProfession LIMIT ${return_limit}`;
+            query = `SELECT primaryName, nconst, knownForTitles from name_basics WHERE primaryName like "%${req.body.term}%" AND primaryProfession LIKE '%director%' LIMIT ${return_limit}`;
         }
         // SQL QUERY HERE
         mysql.query(query, function (err, result) {
