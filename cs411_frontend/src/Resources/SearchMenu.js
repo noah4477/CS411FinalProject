@@ -37,6 +37,7 @@ import Fade from '@material-ui/core/Fade';
             >
             <MenuItem value={"ALL"}>All</MenuItem>
             <MenuItem value={"Movies"}>Movies</MenuItem>
+            <MenuItem value={"Movies"}>TV Shows</MenuItem>
             <MenuItem value={"Actors"}>Actors</MenuItem>
             <MenuItem value={"Directors"}>Directors</MenuItem>
             </Select>
