@@ -1,5 +1,6 @@
 var mysql = require('mysql');
 var neo4j = require('neo4j-driver');
+require('dotenv').config();
 
 /*
 ********************
@@ -8,9 +9,10 @@ var neo4j = require('neo4j-driver');
 */
 
 var mysqlcon = mysql.createConnection({
-    host: "mysql",
+    host: process.env.MYSQL_HOST,
     user: process.env.MYSQL_USER,
-    password: process.env.MYSQL_PASSWORD
+    password: process.env.MYSQL_PASSWORD,
+    database: 'db'
     });
 
 mysqlcon.connect((err) => {
