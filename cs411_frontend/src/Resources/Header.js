@@ -9,6 +9,8 @@ import Button from '@material-ui/core/Button';
 import lightBlue from '@material-ui/core/colors/lightBlue';
 import grey from '@material-ui/core/colors/grey';
 import { withRouter } from 'react-router-dom';
+import SearchMenu from './SearchMenu';
+import Grid from "@material-ui/core/Grid";
 
 const theme = createMuiTheme({
     palette: {
@@ -63,11 +65,7 @@ const style = {
           width: '100%',
         },
       },
-
     };
-
-
-
 
 
 class Header extends React.Component {
@@ -80,7 +78,7 @@ class Header extends React.Component {
 
     submitForm(event) {
         event.preventDefault();
-        this.props.history.push("/search?term=" +this.state.searchTerm);
+        this.props.history.push("/search?term=" +this.state.searchTerm+"&type="+this.refs.searchmenuref.getType());
     }
 
     render() {
@@ -88,36 +86,44 @@ class Header extends React.Component {
         return (
             <div>
                 <Toolbar style={{backgroundColor: 'grey'}}>
-                    <Typography style={{color: 'white'}} variant="h6" noWrap>
-                        IMDB Visualizer
-                    </Typography>
-                
-                    <div className={classes.search}>
-                        <form onSubmit= {this.submitForm}>
-                        <div className={classes.searchIcon}>
-                        <SearchIcon />
-                        </div>
-                        <InputBase
-                        placeholder="Search…"
-                        classes={{
-                            root: classes.inputRoot,
-                            input: classes.inputInput,
-                        }}
-                        inputProps={{ 'aria-label': 'search' }}
-                        onChange={(event) => { this.setState({ searchTerm: event.target.value }); }}
-                        value = {this.state.searchTerm}
-                        fullWidth 
-                        />
-                        </form>
+                      <Button onClick={() => { this.props.history.push("/"); }} style={{left: -16, paddingLeft: 0, width: 240}}>
+                        <Typography style={{color: 'white', width: 200}} variant="h6" noWrap>
+                            IMDB Visualizer
+                        </Typography>
+                      </Button>
+                     
+                    <Grid container  >
+                    <Grid item xs={6} sm={2} style={{maxWidth: 120}}>
+                    <SearchMenu ref={"searchmenuref"} />
+                    </Grid>
+                    <Grid item xs={6} sm={4}>
+                      
+                        <div className={classes.search}>
+                           
+                            <form onSubmit= {this.submitForm}>
+                            <div className={classes.searchIcon}>
+                            <SearchIcon />
+                            </div>
+                            <InputBase
+                            placeholder="Search…"
+                            classes={{
+                                root: classes.inputRoot,
+                                input: classes.inputInput,
+                            }}
+                            inputProps={{ 'aria-label': 'search' }}
+                            onChange={(event) => { this.setState({ searchTerm: event.target.value }); }}
+                            value = {this.state.searchTerm}
+                            fullWidth 
+                            />
+                            </form>
                     </div>
+                    </Grid>
+                    </Grid>
                     <div className={classes.settings}>
                         <Button >
                             <SettingsIcon className={classes.SettingsIcon} />
                         </Button>
                     </div>
-                
-                
-
                 </Toolbar>
             </div>
         );
