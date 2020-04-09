@@ -10,7 +10,7 @@ services:
         NEO4J_Credentials: ${NEO4J_Credentials}
         MYSQL_USER: ${MYSQL_USER}
         MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-        HOST: ${HOST}
+        MYSQL_HOST: ${MYSQL_HOST}
         WAIT_HOSTS: neo4j:7687, mysql:3306
     ports:
         - ${SERVER_PORT}:${SERVER_PORT}
