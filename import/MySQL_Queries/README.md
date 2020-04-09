@@ -1,0 +1,2 @@
+Download the corresponding IMDB data from https://datasets.imdbws.com/ (note: we exclude title.akas.csv).
+Place the data in the imports directory and run the scripts from MySQL Workbench with the server running
