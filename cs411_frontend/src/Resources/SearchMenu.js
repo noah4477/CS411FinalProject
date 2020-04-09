@@ -1,9 +1,6 @@
 import React from 'react';
-import Button from '@material-ui/core/Button';
-import MenuIcon from '@material-ui/icons/Menu';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-import Fade from '@material-ui/core/Fade';
 
  class SearchMenu extends React.Component {
 
@@ -37,7 +34,7 @@ import Fade from '@material-ui/core/Fade';
             >
             <MenuItem value={"ALL"}>All</MenuItem>
             <MenuItem value={"Movies"}>Movies</MenuItem>
-            <MenuItem value={"Movies"}>TV Shows</MenuItem>
+            <MenuItem value={"TVShows"}>TV Shows</MenuItem>
             <MenuItem value={"Actors"}>Actors</MenuItem>
             <MenuItem value={"Directors"}>Directors</MenuItem>
             </Select>

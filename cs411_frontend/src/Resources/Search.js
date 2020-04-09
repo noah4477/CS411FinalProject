@@ -46,18 +46,39 @@ class SearchPage extends React.Component {
     }
 
     componentWillMount() {
-        postRequest('http://localhost:8000/search', this.getParam())
-        .then((data) => data.json())
-        .then((data) => {
-            if(data.error)
+        this.unlisten = this.props.history.listen((location, action) => {
+            if(location.pathname === '/search')
             {
-                console.log("Error in getting search data");
+                const values = queryString.parse(location.search);
+                postRequest('http://localhost:8000/search', {term: values.term, type: values.type })
+                .then((data) => data.json())
+                .then((data) => {
+                    if(data.error)
+                    {
+                        console.log("Error in getting search data");
+                    }
+                    else 
+                    {
+                        this.setState({ searchData: data.results });
+                    }
+                });
             }
-            else 
-            {
-                this.setState({ searchData: data.results });
-            }
-        });
+          });
+          postRequest('http://localhost:8000/search', this.getParam())
+          .then((data) => data.json())
+          .then((data) => {
+              if(data.error)
+              {
+                  console.log("Error in getting search data");
+              }
+              else 
+              {
+                  this.setState({ searchData: data.results });
+              }
+          });
+    }
+    componentWillUnmount() {
+        this.unlisten();
     }
     getParam()
     {
