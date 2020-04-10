@@ -11,6 +11,7 @@ import grey from '@material-ui/core/colors/grey';
 import { withRouter } from 'react-router-dom';
 import SearchMenu from './SearchMenu';
 import Grid from "@material-ui/core/Grid";
+import StarsIcon from '@material-ui/icons/Stars';
 
 const theme = createMuiTheme({
     palette: {
@@ -119,6 +120,11 @@ class Header extends React.Component {
                     </div>
                     </Grid>
                     </Grid>
+                    <div className={classes.settings} style={{right: 64}}>
+                      <Button onClick = {() => { this.props.history.push("/mymovies"); }}>
+                        <StarsIcon className={classes.SettingsIcon}></StarsIcon>
+                      </Button>
+                      </div>
                     <div className={classes.settings}>
                         <Button >
                             <SettingsIcon className={classes.SettingsIcon} />
