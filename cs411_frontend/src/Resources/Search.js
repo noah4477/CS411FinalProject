@@ -139,7 +139,7 @@ class SearchPage extends React.Component {
     getMovies() {
         const { classes } = this.props;
         return (
-            <List className={classes.root} style={{ maxWidth: 'unset', maxHeight: 'calc(100vh - 144px)'}} subheader={<li />}>
+            <List className={classes.root} style={{ maxWidth: 'unset', maxHeight: 'calc(100vh - 144px)'}} subheader={<li />} onClick = {()=> this.props.history.push("/detailView") }>
             {(this.state.searchData == undefined || (this.state.searchData.titles == [] && this.state.searchData.crew == [])) && (<Typography>No Results</Typography>)}
             {(this.state.searchData && this.state.searchData.titles || []).map((movie) => (
                 <li key={`section-${movie.tconst}`} className={classes.listSection}>

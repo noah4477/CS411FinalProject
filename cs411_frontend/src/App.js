@@ -4,6 +4,7 @@ import LandingPage from './Resources/LandingPage';
 import Login from './Resources/Login';
 import SearchPage from './Resources/Search';
 import MyMovies from './Resources/MyMovies';
+import DetailView from './Resources/detailView';
 import './App.css';
 
 function App() {
@@ -22,6 +23,9 @@ function App() {
           </Route>
           <Route path ="/mymovies">
               <MyMovies />
+          </Route>
+          <Route path ="/detailView">
+              <DetailView />
           </Route>
         </Switch>
       </Router>
