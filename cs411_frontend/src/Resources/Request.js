@@ -7,13 +7,11 @@ export function getRequest(url = '')
         cache: 'no-cache',
         credentials: 'same-origin',
         headers: {
-            'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + Cookies.get('jwt')
           },
         redirect: 'follow'
       };
-      
-      return fetch(url, requestOptions)
+      return fetch(url, requestOptions);
 }
 
 export function postRequest(url = '', data = {})
@@ -24,13 +22,11 @@ export function postRequest(url = '', data = {})
         cache: 'no-cache',
         
         headers: {
-            'Content-Type': 'application/json',
             Authorization: 'Bearer ' + Cookies.get('jwt'),
           },
         redirect: 'follow',
         body: JSON.stringify(data)
       };
-      
-     return fetch(url, requestOptions)
+      return fetch(url, requestOptions);
 
 }

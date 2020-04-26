@@ -3,6 +3,9 @@ const { mysql, neo4j } = require('./db.js');
 const passport = require('passport');
 
 module.exports = function(app) {
+app.get("/api/isLoggedIn", passport.authenticate('jwt', {session: false}), function(req, res) {
+    return res.json({user: {username: req.user.username}});
+});
 
 app.post("/api/getMyFavorites", passport.authenticate('jwt', {session: false}), function(req, res) {
         var query = `SELECT B.primaryTitle, A.uid, B.tconst FROM (SELECT tconst, uid FROM user_liked_movies WHERE uid = '${req.body.uid}') A LEFT JOIN (SELECT tconst, primaryTitle FROM title_basics) B ON A.tconst = B.tconst`;
@@ -18,14 +21,14 @@ app.post("/api/getMyFavorites", passport.authenticate('jwt', {session: false}), 
         mysql.query(query, function (err, result) {
             if (err) throw err;
             return res.json({result: result});
-            });
+        });
     });
     app.post("/api/movieUnlike", passport.authenticate('jwt', {session: false}), function(req, res) {
         var query = `DELETE FROM user_liked_movies WHERE uid = 'u000001' AND tconst = "${req.body.movie}"`;
         mysql.query(query, function (err, result) {
             if (err) throw err;
             return res.json({result: result});
-            });
+        });
     });
     //SELECT B.primaryName FROM (SELECT nconst FROM title_principals WHERE tconst = 'tt0133093') A INNER JOIN (SELECT primaryName, nconst FROM name_basics) B ON A.nconst = B.nconst
     app.post("/api/search", passport.authenticate('jwt', {session: false}), function(req, res) {
