@@ -2,6 +2,7 @@ import React from 'react';
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import LandingPage from './Resources/LandingPage';
 import Login from './Resources/Login';
+import Signup from './Resources/Signup';
 import SearchPage from './Resources/Search';
 import MyMovies from './Resources/MyMovies';
 import './App.css';
@@ -16,6 +17,9 @@ function App() {
           </Route>
           <Route path="/login">
             <Login />
+          </Route>
+          <Route path='/signup'>
+            <Signup />
           </Route>
           <Route path="/search">
             <SearchPage />
