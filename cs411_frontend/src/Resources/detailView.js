@@ -37,7 +37,8 @@ class DetailView extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      movieInfo : undefined
+      movieInfo : undefined,
+      title : QueryString.parse(this.props.location.search)['title']
     }
     this.exit = this.exit.bind(this)
   }
@@ -50,6 +51,7 @@ class DetailView extends React.Component{
   
     async componentWillMount() {
     const movie = QueryString.parse(this.props.location.search)
+    console.log({...this.props.location})
     let url = `https://api.themoviedb.org/3/find/${movie.mID}?api_key=0bd4af129149c95eb2534f872838d4a9&language=en-US&external_source=imdb_id`
   
      await getRequest(url)
@@ -62,7 +64,6 @@ class DetailView extends React.Component{
         else 
         { 
           this.setState({movieInfo : data})
-          console.log(data)
         }
     });  
   }
@@ -74,7 +75,7 @@ class DetailView extends React.Component{
       let movieInfo = this.state.movieInfo;
       let details = movieInfo ? (movieInfo.movie_results.length ? movieInfo.movie_results : (movieInfo.tv_results.length ? movieInfo.tv_results : 0 ) ) : 0; 
       let imgURL = (details) ? "https://image.tmdb.org/t/p/w200/" + details[0].poster_path  :''
-      let title =   (details.length) ? details[0].title : "Not Available"
+      let title =   this.state.title// (details.length) ? details[0].title : "Not Available"
       let overview =   (details.length) ? details[0].overview : "-"
       let release_date =   (details.length) ? details[0].release_date : "-"
       let voteAvg =   (details.length) ? details[0].vote_average : "-"
