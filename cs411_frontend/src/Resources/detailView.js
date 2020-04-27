@@ -1,41 +1,108 @@
 import React from 'react'
+import Header from './Header';
+import { withRouter } from 'react-router-dom';
+import QueryString from 'query-string'
 
-class detailView extends React.Component{
+import { getRequest } from './Request';
+
+const style2 = {
+  marginTop: '34px',
+   width: '100%',
+   display:'flex',
+   alignItems: 'center',
+   justifyContent: 'center',
+   flexDirection: 'column'
+}
+
+const style3 =  {
+  marginTop: '34px',
+  width: '100%',
+  display:'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  flexDirection: 'column'
+}
+
+
+const style1 = {
+  width: '80%',
+  backgroundColor:  '#d0d7d9',
+  padding: '15px',
+  margin: 'auto',
+  marginTop: '3vh'
+}
+
+
+class DetailView extends React.Component{
   constructor(props){
     super(props);
-    
+    this.state = {
+      movieInfo : undefined
+    }
     this.exit = this.exit.bind(this)
   }
+
+  exit(data){
+    this.props.history.push('/')
+    
+  }
+
   
-   exit() {
-    alert("exit")
-    // this.props.history.push("/")
-    console.log(this)
+    async componentWillMount() {
+    const movie = QueryString.parse(this.props.location.search)
+    let url = `https://api.themoviedb.org/3/find/${movie.mID}?api_key=0bd4af129149c95eb2534f872838d4a9&language=en-US&external_source=imdb_id`
+  
+     await getRequest(url)
+    .then((data) => data.json())
+    .then((data) => {
+        if(data.error)
+        {
+            console.log("Error in getting search data");
+        }
+        else 
+        { 
+          this.setState({movieInfo : data})
+          console.log(data)
+        }
+    });  
   }
   
-  render(){
-      let imgBaseURL = "https://image.tmdb.org/t/p/w200/"
+// goback  
 
+
+  render(){ 
+      let movieInfo = this.state.movieInfo;
+      let details = movieInfo ? (movieInfo.movie_results.length ? movieInfo.movie_results : (movieInfo.tv_results.length ? movieInfo.tv_results : 0 ) ) : 0; 
+      let imgURL = (details) ? "https://image.tmdb.org/t/p/w200/" + details[0].poster_path  :''
+      let title =   (details.length) ? details[0].title : "Not Available"
+      let overview =   (details.length) ? details[0].overview : "-"
+      let release_date =   (details.length) ? details[0].release_date : "-"
+      let voteAvg =   (details.length) ? details[0].vote_average : "-"
+      
       return (
-        <div  >
-              <div>
+              <>
+                <Header />
+              <div style = {style1}>
                 <p onClick = {this.exit }>X </p>
-                <h2> <u>Movie Title </u></h2>
-                  <div  >
+                <h2 style = {{textAlign : 'center'}}> <u>  {title} </u></h2>
+                  <div style = {style2}  >
                     <div>
-                      <img src = "" alt ='Bhag'/>
+                      <img src = {imgURL}  alt ='Bag'/>
                     </div>
-                    <div >
+                    <div style = {style3}>
                       <div>
-                        Release Date : 12/12/1998
+                        {overview}
                       </div>
-                      <div>
-                        Vote Avg : BhagBhposdil
+                      <div><br/>
+                         Release Data : {release_date}
+                      </div>
+                      <div><br/>
+                        Vote Avg :  {voteAvg}
                       </div>
                     </div>
                   </div>
                 </div>
-      </div>
+                </>
     )
   }
   
@@ -43,7 +110,4 @@ class detailView extends React.Component{
 }
 
 
-
-
-
-export default detailView
+export default (withRouter(DetailView));

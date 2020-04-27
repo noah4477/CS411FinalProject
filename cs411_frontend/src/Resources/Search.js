@@ -139,12 +139,12 @@ class SearchPage extends React.Component {
     getMovies() {
         const { classes } = this.props;
         return (
-            <List className={classes.root} style={{ maxWidth: 'unset', maxHeight: 'calc(100vh - 144px)'}} subheader={<li />} onClick = {()=> this.props.history.push("/detailView") }>
+            <List className={classes.root} style={{ maxWidth: 'unset', maxHeight: 'calc(100vh - 144px)'}} subheader={<li />} >
             {(this.state.searchData == undefined || (this.state.searchData.titles == [] && this.state.searchData.crew == [])) && (<Typography>No Results</Typography>)}
             {(this.state.searchData && this.state.searchData.titles || []).map((movie) => (
                 <li key={`section-${movie.tconst}`} className={classes.listSection}>
                 <ul className={classes.ul}>
-                    <ListItem key={`Movie-${movie.tconst}` }>
+                    <ListItem key={`Movie-${movie.tconst}`} onClick= {() => this.props.history.push("/DetailView?mID=" + movie.tconst)} >
                         <ListItemText primary={`Movie: ${movie.primarytitle}`} />
                         <Button onClick={() => {  movie.uid ? this.unlikeMovie(movie.tconst) : this.likeMovie(movie.tconst, 'u000001') }} > { movie.uid ? "Unlike" : "Like" } </Button>
                     </ListItem>
