@@ -7,6 +7,7 @@ export function getRequest(url = '')
         cache: 'no-cache',
         credentials: 'same-origin',
         headers: {
+            'Content-Type':  'application/json',
             'Authorization': 'Bearer ' + Cookies.get('jwt')
           },
         redirect: 'follow'
@@ -22,6 +23,7 @@ export function postRequest(url = '', data = {})
         cache: 'no-cache',
         
         headers: {
+            'Content-Type':  'application/json',
             Authorization: 'Bearer ' + Cookies.get('jwt'),
           },
         redirect: 'follow',
