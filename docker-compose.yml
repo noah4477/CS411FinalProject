@@ -12,6 +12,7 @@ services:
         MYSQL_PASSWORD: ${MYSQL_PASSWORD}
         MYSQL_HOST: ${MYSQL_HOST}
         WAIT_HOSTS: neo4j:7687, mysql:3306
+        JWTSECRET: ${JWTSECRET}
     ports:
         - ${SERVER_PORT}:${SERVER_PORT}
     volumes:
