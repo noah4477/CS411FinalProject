@@ -20,7 +20,7 @@ module.exports = function(app) {
 
                 const body = { uid: user.uid, username: user.username, issuer: 'npell2@illinois.edu', audience: 'imdbvisualizer.com' };
                 const token = jwt.sign({user: body}, process.env.JWTSECRET, {expiresIn: '1d'});
-                return res.json({ user: user.username, token: token });
+                return res.json({ user: {username: user.username, uid: user.uid}, token: token });
             })
         } catch(error) {return next(error);}
         })(req, res, next);
@@ -36,7 +36,7 @@ module.exports = function(app) {
             const body = { uid: req.user.uid, username: req.user.username, issuer: 'npell2@illinois.edu', audience: 'imdbvisualizer.com' };
 
             const token = jwt.sign({user: body}, process.env.JWTSECRET, {expiresIn: '1d'});
-            return res.json({ user: req.user.username, token: token });
+            return res.json({ user: {username: req.user.username, uid: req.user.uid}, token: token });
         });
       });
 }
