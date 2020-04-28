@@ -26,6 +26,39 @@ module.exports = function(app) {
             return res.json({result: result});
             });
     });
+    app.post("/api/getRatingInfo", function(req, res) {
+        let query = `SELECT averageRating, numVotes FROM title_ratings A WHERE A.tconst = "${req.body.movie}"`;
+        mysql.query(query, function (err, result) {
+            if (err) { 
+                throw err;
+            }
+            console.log(result)
+            return res.json({averageRating: (result || [{averageRating: -1}])[0].averageRating, numVotes: (result[0] ||  [{numVotes: 0}])[0].numVotes});
+        });
+    });
+    app.post("/api/getPairingInfo", function(req, res) {
+        let query = `SELECT primaryName, category, job, characters
+        FROM (select nconst, category, job, characters
+        from title_principals
+        WHERE tconst = "${req.body.movie}") A JOIN (SELECT * FROM name_basics) B
+        ON A.nconst = B.nconst
+        `;
+        mysql.query(query, function (err, result) {
+            if (err) throw err;
+            return res.json({primaryName: result[0].primaryName, category: result[0].category, job: result[0].job, characters: result[0].characters});
+        });
+    });
+
+    app.post("/api/getActorInfo", function(req, res) {
+        let query = `select primaryName, birthYear, deathYear, primaryProfession, knownForTitles
+        from name_basics
+        WHERE nconst = "${req.body.actor}"
+        `;
+        mysql.query(query, function (err, result) {
+            if (err) throw err;
+            return res.json({primaryName: result[0].primaryName, birthYear: result[0].birthYear, deathYear: result[0].deathYear, primaryProfession: result[0].primaryProfession, knownFortitles: result[0].knownFortitles});
+        });
+    });
     //SELECT B.primaryName FROM (SELECT nconst FROM title_principals WHERE tconst = 'tt0133093') A INNER JOIN (SELECT primaryName, nconst FROM name_basics) B ON A.nconst = B.nconst
     app.post("/api/search", function(req, res) {
 
