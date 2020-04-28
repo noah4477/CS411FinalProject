@@ -42,6 +42,7 @@ class MyMovies extends React.Component {
         super(props);
         this.state = { movies: [] };
         this.getMovies = this.getMovies.bind(this);
+        this.unlikeMovie = this.unlikeMovie.bind(this);
     }
 
     componentWillMount() {
@@ -62,7 +63,22 @@ class MyMovies extends React.Component {
   
     }
 
-  
+    unlikeMovie(tconst)
+    {
+        postRequest('http://localhost:8000/api/movieUnlike', {movie: tconst} )
+        .then((data) => data.json())
+        .then((data) => {
+            if(data.error)
+            {
+                console.log("Error in getting search data");
+            }
+            else 
+            {
+                this.setState({ movies: this.state.movies.filter(movie => movie.tconst != tconst) });
+            }
+        });
+    }
+
     getMovies() {
         const { classes } = this.props;
         return (
@@ -73,6 +89,7 @@ class MyMovies extends React.Component {
                 <ul className={classes.ul}>
                     <ListItem key={`Movie-${movie.tconst}` }>
                         <ListItemText primary={`Movie: ${movie.primaryTitle}`} />
+                        <Button onClick={() => { this.unlikeMovie(movie.tconst) }} > {"Unlike"} </Button>
                     </ListItem>
                 </ul>
                 </li>

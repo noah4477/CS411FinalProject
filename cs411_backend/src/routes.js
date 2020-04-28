@@ -19,7 +19,6 @@ module.exports = function(app) {
                 }
 
                 const body = { uid: user.uid, username: user.username, issuer: 'npell2@illinois.edu', audience: 'imdbvisualizer.com' };
-
                 const token = jwt.sign({user: body}, process.env.JWTSECRET, {expiresIn: '1d'});
                 return res.json({ user: user.username, token: token });
             })

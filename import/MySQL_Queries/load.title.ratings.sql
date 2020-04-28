@@ -4,6 +4,7 @@ CREATE TABLE title_ratings (
     averageRating REAL,
     numVotes INT,
     
-    PRIMARY KEY (tconst)
+    PRIMARY KEY (tconst),
+    INDEX (averageRating)
 );
 LOAD DATA INFILE "/var/lib/mysql-files/title.ratings.tsv" INTO table title_ratings IGNORE 1 LINES;
