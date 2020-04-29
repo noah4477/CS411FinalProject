@@ -59,7 +59,7 @@ module.exports = function(app) {
 
     app.post("/api/getPairingInfo", function(req, res) {
         let query = `
-        SELECT primaryName, category, job, characters
+        SELECT A.nconst, primaryName, category, job, characters
         FROM (select nconst, category, job, characters
             FROM title_principals
             WHERE tconst = "${req.body.movie}") A 
@@ -71,11 +71,12 @@ module.exports = function(app) {
             var arr = [];
             result.forEach(function(object){
                 arr.push({
+                    nconst: object.nconst,
                     primaryName: object.primaryName,
                     category: object.category,
                     job: object.job,
                     characters: object.characters
-                })
+                });
             });
             res.json(arr);
         });
