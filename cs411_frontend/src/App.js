@@ -4,8 +4,10 @@ import LandingPage from './Resources/LandingPage';
 import Login from './Resources/Login';
 import SearchPage from './Resources/Search';
 import MyMovies from './Resources/MyMovies';
-import DetailView from './Resources/detailView';
+import MovieDetailView from './Resources/MovieDetailView';
+import CrewDetailView from './Resources/CrewDetailView';
 import './App.css';
+
 
 function App() {
   return (
@@ -24,8 +26,11 @@ function App() {
           <Route path ="/mymovies">
               <MyMovies />
           </Route>
-          <Route path ="/detailView">
-              <DetailView />
+          <Route path ="/movieDetailView">
+              <MovieDetailView />
+          </Route>
+          <Route path ="/crewDetailView">
+              <CrewDetailView />
           </Route>
         </Switch>
       </Router>

@@ -3,7 +3,10 @@ import Header from './Header';
 import { withRouter } from 'react-router-dom';
 import QueryString from 'query-string'
 
-import { getRequest } from './Request';
+import { getRequest, postRequest } from './Request';
+import PersonList from './PersonList.js'
+
+import CloseIcon from '@material-ui/icons/Close';
 
 const style2 = {
   marginTop: '34px',
@@ -33,12 +36,17 @@ const style1 = {
 }
 
 
-class DetailView extends React.Component{
+class MovieDetailView extends React.Component{
   constructor(props){
     super(props);
     this.state = {
       movieInfo : undefined,
-      title : QueryString.parse(this.props.location.search)['title']
+      title : QueryString.parse(this.props.location.search)['title'],
+      aList : [],
+      dList : [],
+      name_Id : [],
+      avgRatings : '',
+      numVotes : '' 
     }
     this.exit = this.exit.bind(this)
   }
@@ -51,7 +59,6 @@ class DetailView extends React.Component{
   
     async componentWillMount() {
     const movie = QueryString.parse(this.props.location.search)
-    console.log({...this.props.location})
     let url = `https://api.themoviedb.org/3/find/${movie.mID}?api_key=0bd4af129149c95eb2534f872838d4a9&language=en-US&external_source=imdb_id`
   
      await getRequest(url)
@@ -66,6 +73,43 @@ class DetailView extends React.Component{
           this.setState({movieInfo : data})
         }
     });  
+    
+      postRequest('http://localhost:8000/api/getRatingInfo', {movie: movie.mID} )
+      .then((data) => data.json())
+      .then((data) => {
+          if(data.error)
+          {console.log("Error in ratingInfo");}
+          else 
+          { 
+            this.setState({avgRatings : data.averageRating, numVotes : data.numVotes})
+          }
+      });  
+      
+      postRequest('http://localhost:8000/api/getPairingInfo', {movie: movie.mID} )
+      .then((data) => data.json())
+      .then((data) => {
+          if(data.error)
+          {console.log("Error in pairing Info");}
+          else 
+          { 
+            let actorlist = [], dirlist = [], info_ID = {}
+            data.forEach((item) => {
+              if (item.category === 'actor')
+                actorlist.push(item.primaryName)
+              else if (item.category === 'director')
+                dirlist.push(item.primaryName)
+              
+              let name = item.primaryName
+              let id = item.nconst
+              info_ID = {...info_ID , ...{[name] : id}};
+              
+            });
+            this.setState({ aList : actorlist, dList : dirlist , name_Id : info_ID})
+            console.log('Actor are \n' , actorlist)
+          }
+      }); 
+      
+    
   }
   
 // goback  
@@ -74,17 +118,17 @@ class DetailView extends React.Component{
   render(){ 
       let movieInfo = this.state.movieInfo;
       let details = movieInfo ? (movieInfo.movie_results.length ? movieInfo.movie_results : (movieInfo.tv_results.length ? movieInfo.tv_results : 0 ) ) : 0; 
-      let imgURL = (details) ? "https://image.tmdb.org/t/p/w200/" + details[0].poster_path  :''
+      let imgURL = (details) ? "https://image.tmdb.org/t/p/original/" + details[0].poster_path  :''
       let title =   this.state.title// (details.length) ? details[0].title : "Not Available"
       let overview =   (details.length) ? details[0].overview : "-"
       let release_date =   (details.length) ? details[0].release_date : "-"
-      let voteAvg =   (details.length) ? details[0].vote_average : "-"
       
       return (
+              
               <>
                 <Header />
               <div style = {style1}>
-                <p onClick = {this.exit }>X </p>
+                <CloseIcon onClick = {this.exit }/>
                 <h2 style = {{textAlign : 'center'}}> <u>  {title} </u></h2>
                   <div style = {style2}  >
                     <div>
@@ -95,11 +139,18 @@ class DetailView extends React.Component{
                         {overview}
                       </div>
                       <div><br/>
-                         Release Data : {release_date}
+                         Release Date : {release_date}
                       </div>
                       <div><br/>
-                        Vote Avg :  {voteAvg}
-                      </div>
+                        Avg Ratings :  {this.state.avgRatings} / 10
+                        <br/>
+                        Num Votes : {this.state.numVotes}
+                      </div><br/>
+                      
+                      Actors :  <PersonList list = {this.state.aList} crewId = {this.state.name_Id}/>
+                      <br/>
+                      Directors :  <PersonList list = {this.state.dList} crewId = {this.state.name_Id}/>
+                      
                     </div>
                   </div>
                 </div>
@@ -111,4 +162,4 @@ class DetailView extends React.Component{
 }
 
 
-export default (withRouter(DetailView));
+export default (withRouter(MovieDetailView));

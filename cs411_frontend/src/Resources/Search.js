@@ -144,7 +144,7 @@ class SearchPage extends React.Component {
             {(this.state.searchData && this.state.searchData.titles || []).map((movie) => (
                 <li key={`section-${movie.tconst}`} className={classes.listSection}>
                 <ul className={classes.ul}>
-                    <ListItem key={`Movie-${movie.tconst}`} onClick= {() => this.props.history.push("/DetailView?title="+movie.primarytitle+"&mID=" + movie.tconst + "&t=" + Object.keys(movie) )} >
+                    <ListItem key={`Movie-${movie.tconst}`} onClick= {() => this.props.history.push("/movieDetailView?title="+movie.primarytitle+"&mID=" + movie.tconst + "&t=" + Object.keys(movie) )} >
                         <ListItemText primary={`Movie: ${movie.primarytitle}`} />
                         <Button onClick={() => {  movie.uid ? this.unlikeMovie(movie.tconst) : this.likeMovie(movie.tconst, 'u000001') }} > { movie.uid ? "Unlike" : "Like" } </Button>
                     </ListItem>
