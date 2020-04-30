@@ -42,6 +42,19 @@ class CrewDetailView extends React.Component{
        this.setState({crewInfo : data.person_results})
      }
  });
+ 
+   postRequest('http://localhost:8000/api/getActorInfo', {actor: crew.id} )
+   .then((data) => data.json())
+   .then((data) => {
+       if(data.error)
+       {console.log("Error in Crew Info");}
+       else 
+       { 
+         
+         console.log(data)
+         // this.setState({avgRatings : data.averageRating, numVotes : data.numVotes})
+       }
+   });
   
   }
   
@@ -50,7 +63,7 @@ class CrewDetailView extends React.Component{
     console.log("1",crewInfo)
     let details = crewInfo ? (crewInfo.length ? crewInfo[0] : 0) : undefined
     console.log("2", details)
-    let imgURL = (details) ? "https://image.tmdb.org/t/p/original" + details.profile_path  :''
+    let imgURL = (details) ? "https://image.tmdb.org/t/p/w200/" + details.profile_path  :''
     console.log('3' ,imgURL)
     
       
@@ -61,12 +74,21 @@ class CrewDetailView extends React.Component{
           <p> this is the crew Info page </p>
           <CloseIcon onClick = {this.exit }/>
           <h2 > <u>  {this.state.name} </u></h2>
-          <div   >
-            <div style = {{maxHeight: '200px' , maxWidth:'200px'}}>
+          <div >
+            <div>
               <img src = {imgURL}  alt ='Bag'/>
             </div>
-          </div>
+            <div><br/>
+               
+            </div>
+            <div><br/>
+              
+              <br/>
+              
+            </div><br/>
+            
           
+          </div>
         </div>
     
       </>

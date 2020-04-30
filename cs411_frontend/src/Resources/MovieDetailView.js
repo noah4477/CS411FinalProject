@@ -105,23 +105,21 @@ class MovieDetailView extends React.Component{
               
             });
             this.setState({ aList : actorlist, dList : dirlist , name_Id : info_ID})
-            console.log('Actor are \n' , actorlist)
           }
       }); 
-      
-    
   }
   
-// goback  
+
 
 
   render(){ 
       let movieInfo = this.state.movieInfo;
       let details = movieInfo ? (movieInfo.movie_results.length ? movieInfo.movie_results : (movieInfo.tv_results.length ? movieInfo.tv_results : 0 ) ) : 0; 
-      let imgURL = (details) ? "https://image.tmdb.org/t/p/original/" + details[0].poster_path  :''
+      let imgURL = (details) ? "https://image.tmdb.org/t/p/w200/" + details[0].poster_path  :''
       let title =   this.state.title// (details.length) ? details[0].title : "Not Available"
       let overview =   (details.length) ? details[0].overview : "-"
       let release_date =   (details.length) ? details[0].release_date : "-"
+      
       
       return (
               
