@@ -112,9 +112,9 @@ module.exports = function(app) {
                     birthYear: result[0].birthYear,
                     deathYear: result[0].deathYear,
                     primaryProfession: result[0].primaryProfession,
-                    knownFortitles: result[0].knownFortitles});
+                    knownForTitles: result[0].knownForTitles});
             } else {
-                return res.json({primaryName: "", birthYear: "", deathYear: "", primaryProfession: "", knownFortitles: ""});
+                return res.json({primaryName: "", birthYear: "", deathYear: "", primaryProfession: "", knownForTitles: ""});
             }
         });
     });
