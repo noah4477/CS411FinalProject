@@ -37,12 +37,11 @@ class CrewDetailView extends React.Component{
      {
          console.log("Error in getting search data");
      }
-     else 
-     { 
+     else {
        this.setState({crewInfo : data.person_results})
      }
  });
- 
+  
    postRequest('http://localhost:8000/api/getActorInfo', {actor: crew.id} )
    .then((data) => data.json())
    .then((data) => {
@@ -50,9 +49,7 @@ class CrewDetailView extends React.Component{
        {console.log("Error in Crew Info");}
        else 
        { 
-         
          console.log(data)
-         // this.setState({avgRatings : data.averageRating, numVotes : data.numVotes})
        }
    });
   
@@ -60,12 +57,8 @@ class CrewDetailView extends React.Component{
   
   render(){
     let crewInfo = this.state.crewInfo;
-    console.log("1",crewInfo)
     let details = crewInfo ? (crewInfo.length ? crewInfo[0] : 0) : undefined
-    console.log("2", details)
     let imgURL = (details) ? "https://image.tmdb.org/t/p/w200/" + details.profile_path  :''
-    console.log('3' ,imgURL)
-    
       
     return (
       <>
