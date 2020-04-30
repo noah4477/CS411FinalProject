@@ -82,6 +82,22 @@ module.exports = function(app) {
         });
     });
 
+    app.post("/api/getMovieName", function(req, res) {
+        let query = `
+        SELECT primaryTitle
+        FROM title_basics
+        WHERE tconst = "${req.body.movie}"
+        `;
+        mysql.query(query, function (err, result) {
+            if (err) throw err;
+            if (result != null && result[0] != null) {
+                return res.json({title: result[0].primaryTitle});
+            } else {
+                return res.json({title: "N/A"})
+            }
+        });
+    });
+
     app.post("/api/getActorInfo", function(req, res) {
         let query = `
         SELECT primaryName, birthYear, deathYear, primaryProfession, knownForTitles
@@ -91,7 +107,12 @@ module.exports = function(app) {
         mysql.query(query, function (err, result) {
             if (err) throw err;
             if (result != null && result[0] != null) {
-                return res.json({primaryName: result[0].primaryName, birthYear: result[0].birthYear, deathYear: result[0].deathYear, primaryProfession: result[0].primaryProfession, knownFortitles: result[0].knownFortitles});
+                return res.json({
+                    primaryName: result[0].primaryName,
+                    birthYear: result[0].birthYear,
+                    deathYear: result[0].deathYear,
+                    primaryProfession: result[0].primaryProfession,
+                    knownFortitles: result[0].knownFortitles});
             } else {
                 return res.json({primaryName: "", birthYear: "", deathYear: "", primaryProfession: "", knownFortitles: ""});
             }
