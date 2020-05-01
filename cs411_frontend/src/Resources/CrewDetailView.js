@@ -2,7 +2,7 @@ import React from 'react'
 import Header from './Header';
 import { withRouter } from 'react-router-dom';
 import QueryString from 'query-string'
-import MovieList from './MovieList.js'
+import MovieList from './Helper/MovieList.js'
 import { getRequest, postRequest } from './Request';
 
 import CloseIcon from '@material-ui/icons/Close';

@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import QueryString from 'query-string'
 
 import { getRequest, postRequest } from './Request';
-import PersonList from './PersonList.js'
+import PersonList from './Helper/PersonList.js'
 
 import CloseIcon from '@material-ui/icons/Close';
 
@@ -61,7 +61,6 @@ class MovieDetailView extends React.Component{
     const movie = QueryString.parse(this.props.location.search)
     let url = `https://api.themoviedb.org/3/find/${movie.mID}?api_key=0bd4af129149c95eb2534f872838d4a9&language=en-US&external_source=imdb_id`
 
-    
      await getRequest(url)
     .then((data) => data.json())
     .then((data) => {
@@ -120,7 +119,6 @@ class MovieDetailView extends React.Component{
       let title =   this.state.title// (details.length) ? details[0].title : "Not Available"
       let overview =   (details.length) ? details[0].overview : "-"
       let release_date =   (details.length) ? details[0].release_date : "-"
-      
       
       return (
               
