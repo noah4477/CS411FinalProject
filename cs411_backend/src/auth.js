@@ -8,19 +8,6 @@ const { v1 } =  require('uuid');
 require('dotenv').config();
 
 
-
-passport.serializeUser(function(user, done) {
-    console.log('Serialize user called.');
-    done(null, user.name);
-  });
-  
-  passport.deserializeUser(function(id, done) {
-    console.log('Deserialize user called.');
-    return done(null, {name: 'Oliver'});
-  });
-
-
-
 passport.use('signup', new LocalStrategy  ({ usernameField: 'username', password: 'password', passReqToCallback : true }, function (req, username, password, done) {
 
     var uuid = v1().replace('-', '').substring(0, 10);
@@ -40,15 +27,15 @@ passport.use('signup', new LocalStrategy  ({ usernameField: 'username', password
 
 
 passport.use('login', new LocalStrategy  ({ usernameField: 'username', passwordField: 'password'}, function (username, password, done) {
-    mysql.query(`SELECT username, passwordHash FROM user_info WHERE username = '${username}'`, function (err, result) {
+    mysql.query(`SELECT uid, username, passwordHash FROM user_info WHERE username = '${username}'`, function (err, result) {
         if (err) {throw err};
         if(result.length > 0)
         {
             
-            bcrypt.compare(password, result[0].passwordHash, function(err, result) {
-                if(result === true)
+            bcrypt.compare(password, result[0].passwordHash, function(err, result2) {
+                if(result2 === true)
                 {
-                    return done(null, {username: username});
+                    return done(null, {username: username, uid: result[0].uid});
                 }
                 else {
                     return done(null, false, { errors: { "email or password": "is invalid" } })
