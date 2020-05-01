@@ -95,7 +95,7 @@ class CrewDetailView extends React.Component{
     const promises= [];
     let movieNameList = []
     
-    for (let i = 1; i<= list.length; i ++){
+    for (let i = 0; i< list.length; i ++){
         const promise =  Axios.post('http://localhost:8000/api/getMovieName', {movie: list[i]} )
         promises.push(promise)
     }
