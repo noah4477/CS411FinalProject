@@ -119,7 +119,7 @@ class MovieDetailView extends React.Component{
       let title =   this.state.title// (details.length) ? details[0].title : "Not Available"
       let overview =   (details.length) ? details[0].overview : "-"
       let release_date =   (details.length) ? details[0].release_date : "-"
-      
+  
       return (
               
               <>

@@ -11,6 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import { postRequest } from './Request';
 import Button from '@material-ui/core/Button';
+import {Star_Rating} from './Helper/Star_Rating.js'
 
 const theme = createMuiTheme({
     palette: {
@@ -146,6 +147,7 @@ class SearchPage extends React.Component {
                 <ul className={classes.ul}>
                     <ListItem key={`Movie-${movie.tconst}`}  >
                         <ListItemText primary={`Movie: ${movie.primarytitle}`} onClick= {() => this.props.history.push("/movieDetailView?title="+movie.primarytitle+"&mID=" + movie.tconst  )}/>
+                        <Star_Rating id={movie.tconst} type = {'movie'}/>
                         <Button onClick={() => {  movie.uid ? this.unlikeMovie(movie.tconst) : this.likeMovie(movie.tconst, 'u000001') }} > { movie.uid ? "Unlike" : "Like" } </Button>
                     </ListItem>
                 </ul>
@@ -156,6 +158,7 @@ class SearchPage extends React.Component {
                 <ul className={classes.ul}>
                     <ListItem key={`Crew-${crew.primaryName}` }>
                         <ListItemText primary={`Crew: ${crew.primaryName}`} onClick={() => {this.props.history.push('/crewDetailView?id=' +crew.nconst + "&name=" + crew.primaryName) }} />
+                        <Star_Rating id={crew.nconst} type = {'actor'} />
                     </ListItem>
                 </ul>
                 </li>

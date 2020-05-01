@@ -1,5 +1,7 @@
 import {FaStar} from 'react-icons/fa'
 import React from 'react'
+import {getRequest, postRequest} from '../Request'
+import CloseIcon from '@material-ui/icons/Close';
 
 
 class Star_Rating extends React.Component {
@@ -8,14 +10,25 @@ class Star_Rating extends React.Component {
     super (props)
     this.state = {
       ratingValue : null,
-      hoverRating : null
+      hoverRating : null,
+      rated : 0,
+      type : this.props.type
     }
     this.setRequest = this.setRequest.bind(this)
   }
   
+  componentWillMount(){
+    
+    // make a get Request to get ratingValue form server if already on DB  
+    
+  }
+  
+  
   async setRequest ({target}){
+    target.value = (target.value) ? target.value : null
+    
     await this.setState({ratingValue: target.value})
-    alert(`Send Request: \n ID : ${this.props.id} , Rating : ${this.state.ratingValue} ` )
+    alert(`Send Request: \n ID : ${this.props.id} , Rating : ${this.state.ratingValue} , Type : ${this.state.type} ` )
     
     // Make Request to Server Here !!!
     
@@ -42,7 +55,8 @@ class Star_Rating extends React.Component {
           onMouseEnter = { ( ) => { this.setState({hoverRating:curr_rating})  }}
           onMouseLeave = { ( ) => { this.setState({hoverRating: null})  }}/>
         </label>
-      )})}
+        )})}
+        <CloseIcon onClick = {this.setRequest }/>
       </div>
     )
   }

@@ -122,7 +122,9 @@ class CrewDetailView extends React.Component{
     let crewInfo = this.state.crewInfo;
     let details = crewInfo ? (crewInfo.length ? crewInfo[0] : 0) : undefined
     let imgURL = (details) ? "https://image.tmdb.org/t/p/w200/" + details.profile_path  : AltImg
-      
+    if(details)
+      imgURL = details.profile_path ? imgURL : AltImg
+    
     return (
       <>
         <Header />
