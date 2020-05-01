@@ -7,6 +7,7 @@ import { getRequest, postRequest } from './Request';
 
 import CloseIcon from '@material-ui/icons/Close';
 import Axios from 'axios'
+import AltImg from './Helper/Movie_Not_Found.png'
 
 const style2 = {
   marginTop: '34px',
@@ -120,7 +121,7 @@ class CrewDetailView extends React.Component{
   render(){
     let crewInfo = this.state.crewInfo;
     let details = crewInfo ? (crewInfo.length ? crewInfo[0] : 0) : undefined
-    let imgURL = (details) ? "https://image.tmdb.org/t/p/w200/" + details.profile_path  :''
+    let imgURL = (details) ? "https://image.tmdb.org/t/p/w200/" + details.profile_path  : AltImg
       
     return (
       <>

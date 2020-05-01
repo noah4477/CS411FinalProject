@@ -5,7 +5,7 @@ import QueryString from 'query-string'
 
 import { getRequest, postRequest } from './Request';
 import PersonList from './Helper/PersonList.js'
-
+import AltImg from './Helper/Movie_Not_Found.png'
 import CloseIcon from '@material-ui/icons/Close';
 
 const style2 = {
@@ -115,7 +115,7 @@ class MovieDetailView extends React.Component{
   render(){ 
       let movieInfo = this.state.movieInfo;
       let details = movieInfo ? (movieInfo.movie_results.length ? movieInfo.movie_results : (movieInfo.tv_results.length ? movieInfo.tv_results : 0 ) ) : 0; 
-      let imgURL = (details) ? "https://image.tmdb.org/t/p/w200/" + details[0].poster_path  :''
+      let imgURL = (details) ? "https://image.tmdb.org/t/p/w200/" + details[0].poster_path  : AltImg
       let title =   this.state.title// (details.length) ? details[0].title : "Not Available"
       let overview =   (details.length) ? details[0].overview : "-"
       let release_date =   (details.length) ? details[0].release_date : "-"
