@@ -8,9 +8,10 @@ class PersonList extends React.Component{
   
   
   render(){
+    let space = '  , '
     let r = this.props.list.map((item,i) => {
         let crew = this.props.crewId[`${item}`]
-        return   <a key={i} href='' onClick = { () => this.props.history.push('/crewDetailView?id=' +crew + "&name=" + item)}> {item} </a>
+        return   <a key={i} href='' onClick = { () => this.props.history.push('/crewDetailView'+ this.props.addr +'?id=' +crew + "&name=" + item)}> {item} {space}</a>
     } )
     
     return (

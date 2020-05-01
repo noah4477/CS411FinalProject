@@ -60,7 +60,8 @@ class MovieDetailView extends React.Component{
     async componentWillMount() {
     const movie = QueryString.parse(this.props.location.search)
     let url = `https://api.themoviedb.org/3/find/${movie.mID}?api_key=0bd4af129149c95eb2534f872838d4a9&language=en-US&external_source=imdb_id`
-  
+
+    
      await getRequest(url)
     .then((data) => data.json())
     .then((data) => {
@@ -133,7 +134,7 @@ class MovieDetailView extends React.Component{
                       <img src = {imgURL}  alt ='Bag'/>
                     </div>
                     <div style = {style3}>
-                      <div>
+                      <div style={{width:"85%" , textAlign : 'center'}}>
                         {overview}
                       </div>
                       <div><br/>
@@ -145,9 +146,9 @@ class MovieDetailView extends React.Component{
                         Num Votes : {this.state.numVotes}
                       </div><br/>
                       
-                      Actors :  <PersonList list = {this.state.aList} crewId = {this.state.name_Id}/>
+                      Actors :  <PersonList list = {this.state.aList} crewId = {this.state.name_Id} addr = 'crewDetailView'/>
                       <br/>
-                      Directors :  <PersonList list = {this.state.dList} crewId = {this.state.name_Id}/>
+                      Directors :  <PersonList list = {this.state.dList} crewId = {this.state.name_Id} addr = 'crewDetailView'/>
                       
                     </div>
                   </div>
