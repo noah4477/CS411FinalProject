@@ -42,7 +42,7 @@ class CrewDetailView extends React.Component{
     this.state = {
       crewInfo : undefined,
       id : '',
-      name : '',
+      name :'' ,
       titles : [],
       titleNames: [],
       profession : ''
@@ -59,11 +59,13 @@ class CrewDetailView extends React.Component{
   
   async componentWillMount() {
   
-  const crew = QueryString.parse(this.props.location.search)
+  const crew = await QueryString.parse(this.props.location.search)
   let url = `https://api.themoviedb.org/3/find/${crew.id}?api_key=0bd4af129149c95eb2534f872838d4a9&language=en-US&external_source=imdb_id`
-  this.setState ({id : crew.id, name : crew.name})
+  let name = crew.name, id = crew.id;
+  this.setState({id : id , name: name})
   
-  await getRequest(url)
+  
+   getRequest(url)
  .then((data) => data.json())
  .then((data) => {
      if(data.error)
@@ -135,7 +137,7 @@ class CrewDetailView extends React.Component{
                  Profession : {this.state.profession}
               </div>
               <div style= {{textAlign  :' center'}}><br/>
-                <p >Movies : </p> <MovieList list = {this.state.titleNames} IDlist = {this.state.titles} />
+                Movies :  <MovieList list = {this.state.titleNames} IDlist = {this.state.titles} />
               
               </div><br/>
             </div>

@@ -8,6 +8,7 @@ class MovieList extends React.Component{
   
   
   render(){
+    let space = '  ,  '
     let IDs = [] , list = this.props.list;
     IDs = this.props.IDlist.length  ? this.props.IDlist : new Array(list.length).fill(0);
     
@@ -17,7 +18,7 @@ class MovieList extends React.Component{
     }
     
     let r = list.map((item,i) => {
-        return   <a key={i} href='' onClick = { () => this.props.history.push("/movieDetailView?title="+ item +"&mID=" + IDs[i]) }> {item} </a>
+        return   <a key={i} href='' onClick = { () => this.props.history.push("/movieDetailView?title="+ item +"&mID=" + IDs[i]) }> {item} {space}</a>
     } )
     
     return (
