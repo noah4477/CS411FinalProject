@@ -32,7 +32,6 @@ app.post("/api/getMyFavorites", passport.authenticate('jwt', {session: false}), 
     });
     //SELECT B.primaryName FROM (SELECT nconst FROM title_principals WHERE tconst = 'tt0133093') A INNER JOIN (SELECT primaryName, nconst FROM name_basics) B ON A.nconst = B.nconst
     app.post("/api/search", passport.authenticate('jwt', {session: false}), function(req, res) {
-
         var query = "";
 
         if(req.body.type === "ALL")
