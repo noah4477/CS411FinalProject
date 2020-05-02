@@ -85,7 +85,7 @@ class CrewDetailView extends React.Component{
        {console.log("Error in Crew Info");}
        else 
        { 
-         this.setState({ titles : data.knownForTitles.split(',') , profession : data.primaryProfession})
+         this.setState({ titles : (data.knownForTitles) ?  data.knownForTitles.split(',') : [] , profession : data.primaryProfession})
          this.getMovies(this.state.titles)
        }
    });
