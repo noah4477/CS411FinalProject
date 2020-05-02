@@ -4,10 +4,10 @@ import { withRouter } from 'react-router-dom';
 import QueryString from 'query-string'
 import MovieList from './Helper/MovieList.js'
 import { getRequest, postRequest } from './Request';
-
 import CloseIcon from '@material-ui/icons/Close';
 import Axios from 'axios'
 import AltImg from './Helper/Movie_Not_Found.png'
+import Cookies from 'js-cookie';
 
 const style2 = {
   marginTop: '34px',
@@ -97,7 +97,10 @@ class CrewDetailView extends React.Component{
     let movieNameList = []
     
     for (let i = 0; i< list.length; i ++){
-        const promise =  Axios.post('http://localhost:8000/api/getMovieName', {movie: list[i]} )
+        const promise =  Axios.post('http://localhost:8000/api/getMovieName', {movie: list[i]}, {headers: {
+          'Content-Type':  'application/json',
+          Authorization: 'Bearer ' + Cookies.get('jwt'),
+        }})
         promises.push(promise)
     }
     
@@ -121,10 +124,7 @@ class CrewDetailView extends React.Component{
   render(){
     let crewInfo = this.state.crewInfo;
     let details = crewInfo ? (crewInfo.length ? crewInfo[0] : 0) : undefined
-    let imgURL = (details) ? "https://image.tmdb.org/t/p/w200/" + details.profile_path  : AltImg
-    if(details)
-      imgURL = details.profile_path ? imgURL : AltImg
-    
+    let imgURL = (details && details.profile_path) ? "https://image.tmdb.org/t/p/w200/" + details.profile_path  : AltImg
     return (
       <>
         <Header />

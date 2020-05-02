@@ -10,10 +10,16 @@
   "author": "Noah Pell",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^4.0.1",
     "body-parser": "^1.19.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
     "mysql": "^2.18.1",
-    "neo4j-driver": "^4.0.2"
+    "neo4j-driver": "^4.0.2",
+    "passport": "^0.4.1",
+    "passport-jwt": "^4.0.0",
+    "passport-local": "^1.0.0",
+    "uuid": "^7.0.3"
   }
 }
