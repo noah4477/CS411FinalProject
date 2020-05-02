@@ -1,5 +1,5 @@
 const Cookies = require('js-cookie');
-const axios = require('axios');
+
 export function getRequest(url = '')
 {
     var requestOptions = {

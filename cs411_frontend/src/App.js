@@ -5,6 +5,8 @@ import Login from './Resources/Login';
 import Signup from './Resources/Signup';
 import SearchPage from './Resources/Search';
 import MyMovies from './Resources/MyMovies';
+import MovieDetailView from './Resources/MovieDetailView';
+import CrewDetailView from './Resources/CrewDetailView';
 import RouterGaurd from './Resources/RouterGaurd';
 import './App.css';
 
@@ -35,6 +37,12 @@ class App extends React.Component {
             </Route>
             <Route path ="/mymovies">
                 <MyMovies />
+            </Route>
+            <Route path ="/movieDetailView">
+              <MovieDetailView />
+            </Route>
+            <Route path ="/crewDetailView">
+                <CrewDetailView />
             </Route>
           </Switch>
         </Router>

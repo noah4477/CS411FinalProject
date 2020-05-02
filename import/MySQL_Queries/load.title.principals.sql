@@ -1,3 +1,4 @@
+
 DROP TABLE IF EXISTS title_principals;
 CREATE TABLE title_principals (
 	tconst VARCHAR(10),

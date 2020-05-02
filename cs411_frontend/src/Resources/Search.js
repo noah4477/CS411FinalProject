@@ -11,6 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import { postRequest } from './Request';
 import Button from '@material-ui/core/Button';
+import {Star_Rating} from './Helper/Star_Rating.js'
 
 const theme = createMuiTheme({
     palette: {
@@ -139,13 +140,14 @@ class SearchPage extends React.Component {
     getMovies() {
         const { classes } = this.props;
         return (
-            <List className={classes.root} style={{ maxWidth: 'unset', maxHeight: 'calc(100vh - 144px)'}} subheader={<li />}>
+            <List className={classes.root} style={{ maxWidth: 'unset', maxHeight: 'calc(100vh - 144px)'}} subheader={<li />} >
             {(this.state.searchData == undefined || (this.state.searchData.titles == [] && this.state.searchData.crew == [])) && (<Typography>No Results</Typography>)}
             {(this.state.searchData && this.state.searchData.titles || []).map((movie) => (
                 <li key={`section-${movie.tconst}`} className={classes.listSection}>
                 <ul className={classes.ul}>
-                    <ListItem key={`Movie-${movie.tconst}` }>
-                        <ListItemText primary={`Movie: ${movie.primarytitle}`} />
+                    <ListItem key={`Movie-${movie.tconst}`}  >
+                        <ListItemText primary={`Movie: ${movie.primarytitle}`} onClick= {() => this.props.history.push("/movieDetailView?title="+movie.primarytitle+"&mID=" + movie.tconst  )}/>
+                        <Star_Rating id={movie.tconst} type = {'movie'}/>
                         <Button onClick={() => {  movie.uid ? this.unlikeMovie(movie.tconst) : this.likeMovie(movie.tconst, 'u000001') }} > { movie.uid ? "Unlike" : "Like" } </Button>
                     </ListItem>
                 </ul>
@@ -155,7 +157,8 @@ class SearchPage extends React.Component {
                 <li key={`section-${crew.nconst}`} className={classes.listSection}>
                 <ul className={classes.ul}>
                     <ListItem key={`Crew-${crew.primaryName}` }>
-                        <ListItemText primary={`Crew: ${crew.primaryName}`} />
+                        <ListItemText primary={`Crew: ${crew.primaryName}`} onClick={() => {this.props.history.push('/crewDetailView?id=' +crew.nconst + "&name=" + crew.primaryName) }} />
+                        <Star_Rating id={crew.nconst} type = {'actor'} />
                     </ListItem>
                 </ul>
                 </li>
