@@ -41,7 +41,10 @@ class Gallery extends React.Component {
               moviePosterList.push(imgURL)
           }
           
-          this.setState({galleryItems : moviePosterList.map((image,i) => <div style = {{textAlign : 'center'}}><img key={i} src = {image} /></div>)})
+          this.setState({galleryItems : moviePosterList.map((image,i) => 
+            <div onClick = { () => alert("Teri maa ki ")}
+            style = {{textAlign : 'center'}}><img key={i} src = {image} /></div>)
+          })
     })
     // 
     
