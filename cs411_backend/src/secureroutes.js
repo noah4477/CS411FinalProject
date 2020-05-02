@@ -111,6 +111,35 @@ app.post("/api/getMyFavorites", passport.authenticate('jwt', {session: false}), 
         });
     });
 
+    app.post("/api/updateStarRating", passport.authenticate('jwt', {session: false}), function(req, res) {
+        let id = req.body.id;
+        let rating = req.body.rating;
+        let type = req.body.type;
+        let query = ``;
+        if (type == "movie" ) {
+            query = `
+            INSERT INTO user_liked_movies (uid, tconst, stars)
+            VALUES ('${req.body.uid}', '${id}', '${rating}')
+            ON DUPLICATE KEY UPDATE
+                stars = '${rating}'
+            `;
+        } else if (type == "actor") {
+            query = `
+            INSERT INTO user_liked_actors (uid, nconst, stars)
+            VALUES ('${req.body.uid}', '${id}', '${rating}')
+            ON DUPLICATE KEY UPDATE
+                stars = '${rating}'
+            `;
+        } else {
+            console.log("Bad type in updateStarRating");
+        }
+
+        mysql.query(query, function (err, result) {
+            if (err) throw err;
+            return res.json({result: result});
+        });
+    });
+
     app.post("/api/search", passport.authenticate('jwt', {session: false}), function(req, res) {
         var query = "";
 
