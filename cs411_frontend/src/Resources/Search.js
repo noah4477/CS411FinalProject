@@ -148,6 +148,7 @@ class SearchPage extends React.Component {
                     <ListItem key={`Movie-${movie.tconst}`}  >
                         <ListItemText primary={`Movie: ${movie.primarytitle}`} onClick= {() => this.props.history.push("/movieDetailView?title="+movie.primarytitle+"&mID=" + movie.tconst  )}/>
                         <Star_Rating id={movie.tconst} type = {'movie'}/>
+                      
                         <Button onClick={() => {  movie.uid ? this.unlikeMovie(movie.tconst) : this.likeMovie(movie.tconst, 'u000001') }} > { movie.uid ? "Unlike" : "Like" } </Button>
                     </ListItem>
                 </ul>

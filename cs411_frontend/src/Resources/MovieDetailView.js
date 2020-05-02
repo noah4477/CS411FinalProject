@@ -8,6 +8,7 @@ import PersonList from './Helper/PersonList.js'
 import AltImg from './Helper/Movie_Not_Found.png'
 import CloseIcon from '@material-ui/icons/Close';
 
+
 const style2 = {
   marginTop: '34px',
    width: '100%',
@@ -60,6 +61,8 @@ class MovieDetailView extends React.Component{
     async componentWillMount() {
     const movie = QueryString.parse(this.props.location.search)
     let url = `https://api.themoviedb.org/3/find/${movie.mID}?api_key=0bd4af129149c95eb2534f872838d4a9&language=en-US&external_source=imdb_id`
+    
+    console.log(movie.mID)
 
      await getRequest(url)
     .then((data) => data.json())
@@ -116,7 +119,6 @@ class MovieDetailView extends React.Component{
       let movieInfo = this.state.movieInfo;
       let details = movieInfo ? (movieInfo.movie_results.length ? movieInfo.movie_results : (movieInfo.tv_results.length ? movieInfo.tv_results : 0 ) ) : 0; 
       let imgURL = (details && details[0].poster_path) ? "https://image.tmdb.org/t/p/w200/" + details[0].poster_path  : AltImg
-      console.log(imgURL)
       let title =   this.state.title// (details.length) ? details[0].title : "Not Available"
       let overview =   (details.length) ? details[0].overview : "-"
       let release_date =   (details.length) ? details[0].release_date : "-"
