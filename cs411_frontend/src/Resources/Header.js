@@ -4,7 +4,7 @@ import Typography from '@material-ui/core/Typography';
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
 import { fade, withStyles,createMuiTheme  } from '@material-ui/core/styles';
-import SettingsIcon from '@material-ui/icons/Settings';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import Button from '@material-ui/core/Button';
 import lightBlue from '@material-ui/core/colors/lightBlue';
 import grey from '@material-ui/core/colors/grey';
@@ -12,6 +12,7 @@ import { withRouter } from 'react-router-dom';
 import SearchMenu from './SearchMenu';
 import Grid from "@material-ui/core/Grid";
 import StarsIcon from '@material-ui/icons/Stars';
+const Cookies = require('js-cookie');
 
 const theme = createMuiTheme({
     palette: {
@@ -126,8 +127,8 @@ class Header extends React.Component {
                       </Button>
                       </div>
                     <div className={classes.settings}>
-                        <Button >
-                            <SettingsIcon className={classes.SettingsIcon} />
+                        <Button onClick = { () =>  {Cookies.remove('jwt'); this.props.history.push("/login")}}>
+                            <ExitToAppIcon className={classes.SettingsIcon} />
                         </Button>
                     </div>
                 </Toolbar>

@@ -8,7 +8,7 @@ import lightBlue from '@material-ui/core/colors/lightBlue';
 import grey from '@material-ui/core/colors/grey';
 import {withRouter} from 'react-router-dom';
 import TextField from '@material-ui/core/TextField';
-const Cookies = require('js-cookie')
+const Cookies = require('js-cookie');
 var jwt = require('jsonwebtoken');
 
 const theme = createMuiTheme({
