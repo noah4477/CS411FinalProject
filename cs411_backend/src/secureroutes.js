@@ -112,7 +112,6 @@ app.post("/api/getMyFavorites", passport.authenticate('jwt', {session: false}), 
     });
 
     app.post("/api/search", passport.authenticate('jwt', {session: false}), function(req, res) {
-
         var query = "";
 
         if(req.body.type === "ALL")
