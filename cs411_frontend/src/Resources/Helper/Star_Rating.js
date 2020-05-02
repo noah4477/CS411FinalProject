@@ -31,6 +31,19 @@ class Star_Rating extends React.Component {
     alert(`Send Request: \n ID : ${this.props.id} , Rating : ${this.state.ratingValue} , Type : ${this.state.type} ` )
     
     // Make Request to Server Here !!!
+    let updateBody = { id : this.props.id, type: this.state.type , rating : target.value };
+     console.log(updateBody)
+  
+    postRequest('http://localhost:8000/api/updateStarRating', updateBody )
+    .then((data) => data.json())
+    .then((data) => {
+        if(data.error)
+        {console.log("Error in Update");}
+        else 
+        { 
+          console.log(data)
+        }
+    });
     
   }
   
