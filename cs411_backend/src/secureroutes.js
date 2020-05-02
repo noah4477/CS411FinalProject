@@ -1,5 +1,5 @@
 const RETURN_LIMIT = 25;
-const { mysql, neo4j } = require('./db.js');
+const { mysql } = require('./db.js');
 const passport = require('passport');
 
 module.exports = function(app) {
