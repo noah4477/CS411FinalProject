@@ -140,6 +140,27 @@ app.post("/api/getMyFavorites", passport.authenticate('jwt', {session: false}), 
         });
     });
 
+    app.post("/api/getStarRating", passport.authenticate('jwt', {session: false}), function(req, res) {
+        let id = req.body.id;
+        let type = req.body.type;
+        let id_type = (type == "movie") ? "tconst" : "nconst";
+        let table_name = (type == "movie") ?
+         "user_liked_movies" : "user_liked_actors"
+        let query = `
+        SELECT stars
+        FROM ${table_name}
+        WHERE uid = "${req.user.uid}" AND ${id_type} = "${id}" 
+        `;
+        mysql.query(query, function (err, result) {
+            if (err) throw err;
+            if (result != null && result[0] != null) {
+                return res.json({rating: result[0].stars});
+            } else {
+                return res.json({rating: null})
+            }
+        });
+    });
+
     app.post("/api/search", passport.authenticate('jwt', {session: false}), function(req, res) {
         var query = "";
 
