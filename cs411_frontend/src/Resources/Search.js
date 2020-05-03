@@ -44,8 +44,6 @@ class SearchPage extends React.Component {
         this.state = { searchData: { crew: [], titles: [] } };
         this.getParam = this.getParam.bind(this);
         this.getMovies = this.getMovies.bind(this);
-        this.likeMovie = this.likeMovie.bind(this);
-        this.unlikeMovie = this.unlikeMovie.bind(this);
     }
 
     componentWillMount() {
@@ -84,52 +82,6 @@ class SearchPage extends React.Component {
         this.unlisten();
     }
 
-    unlikeMovie(tconst)
-    {
-        postRequest('http://localhost:8000/api/movieUnlike', {movie: tconst} )
-        .then((data) => data.json())
-        .then((data) => {
-            if(data.error)
-            {
-                console.log("Error in getting search data");
-            }
-            else 
-            {
-                this.setState({searchData: { crew: this.state.searchData.crew, titles: this.state.searchData.titles.map((elem) => 
-                { 
-                    if(elem.tconst === tconst)
-                    {
-                        elem.uid = null;
-                    } 
-                    return elem;
-                })}});
-            }
-        });
-    }
-
-    likeMovie(tconst, uid)
-    {
-        postRequest('http://localhost:8000/api/movieLike', { movie: tconst })
-        .then((data) => data.json())
-        .then((data) => {
-            if(data.error)
-            {
-                console.log("Error in getting search data");
-            }
-            else 
-            {
-               this.setState({searchData: { crew: this.state.searchData.crew, titles: this.state.searchData.titles.map((elem) => 
-                { 
-                    if(elem.tconst == tconst)
-                    {
-                        return {...elem, uid: uid};
-                    } 
-                    return elem;
-                })}});
-            }
-        });
-    }
-
 
 
     getParam()
@@ -148,9 +100,7 @@ class SearchPage extends React.Component {
                     <ListItem key={`Movie-${movie.tconst}`}  >
                         <ListItemText primary={`Movie: ${movie.primarytitle}`} onClick= {() => this.props.history.push("/movieDetailView?title="+movie.primarytitle+"&mID=" + movie.tconst  )}/>
                         <Star_Rating id={movie.tconst} type = {'movie'}/>
-                        
-                        <Button onClick={() => {  movie.uid ? this.unlikeMovie(movie.tconst) : this.likeMovie(movie.tconst, 'u000001') }} > { movie.uid ? "Unlike" : "Like" } </Button>
-                    </ListItem>
+                      </ListItem>
                 </ul>
                 </li>
             ))}

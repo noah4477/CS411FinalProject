@@ -18,19 +18,19 @@ class Star_Rating extends React.Component {
   }
   
   componentWillMount(){
-    // postRequest('http://localhost:8000/api/updateStarRating', updateBody )
-    // .then((data) => data.json())
-    // .then((data) => {
-    //     if(data.error)
-    //     {console.log("Error in Update");}
-    //     else 
-    //     { 
-    //       console.log(data)
-    //     }
-    // });
     let getRating = { id : this.props.id, type: this.state.type }
-    console.log(getRating)
-    // postRequest('http://localhost:8000/api/getStarRating', updateBody )
+    postRequest('http://localhost:8000/api/getStarRating', getRating )
+    .then((data) => data.json())
+    .then((data) => {
+        if(data.error)
+        {console.log("Error in Update");}
+        else 
+        { 
+          
+          this.setState ({ratingValue : data.rating})
+        }
+    });
+    
     
   }
   
@@ -39,7 +39,7 @@ class Star_Rating extends React.Component {
     target.value = (target.value) ? target.value : null
     
     await this.setState({ratingValue: target.value})
-    alert(`Send Request: \n ID : ${this.props.id} , Rating : ${this.state.ratingValue} , Type : ${this.state.type} ` )
+    
     
     // Make Request to Server Here !!!
     let updateBody = { id : this.props.id, type: this.state.type , rating : target.value };
@@ -62,7 +62,7 @@ class Star_Rating extends React.Component {
   // onClick( (e) => {this.getRequest(e) } )
   render (){
     return(
-      <div style={{margin:'auto', width:'80%', textAlign:'center'}}>
+      <div style={{margin:'auto', width:'80%', textAlign:'right'}}>
       {Array(5).fill(1).map( (star, index) => {
         let curr_rating = index + 1;
         return (
