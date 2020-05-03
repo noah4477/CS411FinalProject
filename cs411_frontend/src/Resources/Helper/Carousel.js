@@ -5,6 +5,7 @@ import AltImg from './Movie_Not_Found.png'
 import Axios from 'axios'
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
+import { withRouter } from 'react-router-dom';
  
 class Gallery extends React.Component {
   constructor (props){
@@ -42,7 +43,7 @@ class Gallery extends React.Component {
           }
           
           this.setState({galleryItems : moviePosterList.map((image,i) => 
-            <div onClick = { () => alert("Teri maa ki ")}
+            <div onClick = { () => this.props.history.push("/movieDetailView?title=null"+"&mID=" + this.state.IDs[i]  )  }
             style = {{textAlign : 'center'}}><img key={i} src = {image} /></div>)
           })
     })
@@ -50,7 +51,7 @@ class Gallery extends React.Component {
     
   }
  
- 
+
   render() {
     return (
       <div style ={{padding : "70px 0px 10px 0px", width : "80%" ,margin:'auto'}} >
@@ -70,4 +71,4 @@ class Gallery extends React.Component {
   }
 }
 
-export default Gallery
+export default (withRouter(Gallery));

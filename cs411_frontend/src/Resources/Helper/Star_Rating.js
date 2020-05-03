@@ -18,8 +18,19 @@ class Star_Rating extends React.Component {
   }
   
   componentWillMount(){
-    
-    // make a get Request to get ratingValue form server if already on DB  
+    // postRequest('http://localhost:8000/api/updateStarRating', updateBody )
+    // .then((data) => data.json())
+    // .then((data) => {
+    //     if(data.error)
+    //     {console.log("Error in Update");}
+    //     else 
+    //     { 
+    //       console.log(data)
+    //     }
+    // });
+    let getRating = { id : this.props.id, type: this.state.type }
+    console.log(getRating)
+    // postRequest('http://localhost:8000/api/getStarRating', updateBody )
     
   }
   
@@ -32,7 +43,7 @@ class Star_Rating extends React.Component {
     
     // Make Request to Server Here !!!
     let updateBody = { id : this.props.id, type: this.state.type , rating : target.value };
-     console.log(updateBody)
+    
   
     postRequest('http://localhost:8000/api/updateStarRating', updateBody )
     .then((data) => data.json())
@@ -41,7 +52,7 @@ class Star_Rating extends React.Component {
         {console.log("Error in Update");}
         else 
         { 
-          console.log(data)
+          console.log('Sucess')
         }
     });
     

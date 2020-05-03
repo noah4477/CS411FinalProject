@@ -119,7 +119,7 @@ class MovieDetailView extends React.Component{
       let movieInfo = this.state.movieInfo;
       let details = movieInfo ? (movieInfo.movie_results.length ? movieInfo.movie_results : (movieInfo.tv_results.length ? movieInfo.tv_results : 0 ) ) : 0; 
       let imgURL = (details && details[0].poster_path) ? "https://image.tmdb.org/t/p/w200/" + details[0].poster_path  : AltImg
-      let title =   this.state.title// (details.length) ? details[0].title : "Not Available"
+      let title =   (details.length) ? details[0].title : this.state.title
       let overview =   (details.length) ? details[0].overview : "-"
       let release_date =   (details.length) ? details[0].release_date : "-"
       return (

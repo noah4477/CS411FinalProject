@@ -74,7 +74,9 @@ class CrewDetailView extends React.Component{
          console.log("Error in getting search data");
      }
      else {
+       let name = data.person_results ? (data.person_results[0]) ? data.person_results[0].name : this.state.name : this.state.name
        this.setState({crewInfo : data.person_results})
+       this.setState({name : name })
      }
  });
   
