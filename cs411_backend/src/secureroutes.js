@@ -165,10 +165,10 @@ app.post("/api/getMyFavorites", passport.authenticate('jwt', {session: false}), 
 
         if(req.body.type === "ALL")
         {
-            query = `SELECT A.primarytitle, A.tconst, A.genres, B.uid, B.movieStars FROM (SELECT primarytitle, tconst, genres from title_basics WHERE primarytitle like "${req.body.term}%") A LEFT JOIN (SELECT uid, tconst, stars as movieStars from user_liked_movies WHERE uid = '${req.user.uid}') B ON A.tconst = B.tconst LIMIT ${RETURN_LIMIT}`;
+            query = `SELECT A.primarytitle, A.tconst, A.genres, B.uid FROM (SELECT primarytitle, tconst, genres from title_basics WHERE primarytitle like "${req.body.term}%") A LEFT JOIN (SELECT uid, tconst from user_liked_movies WHERE uid = 'u000001') B ON A.tconst = B.tconst LIMIT ${RETURN_LIMIT}`;
             mysql.query(query, function (err, result1) {
                 if (err) throw err;
-                query = `SELECT A.primaryName, A.nconst, A.knownForTitles, B.stars as actorStars from (SELECT * from name_basics) A LEFT JOIN (select * from user_liked_actors WHERE uid = '${req.user.uid}') B ON A.nconst = B.nconst WHERE primaryName like "${req.body.term}%" LIMIT ${RETURN_LIMIT}`;
+                query = `SELECT primaryName, nconst, knownForTitles from name_basics WHERE primaryName like "${req.body.term}%" LIMIT ${RETURN_LIMIT}`;
                 mysql.query(query, function (err, result2) {
                     if (err) throw err;
                     return res.json({titles: result1, crew: result2});
@@ -177,16 +177,16 @@ app.post("/api/getMyFavorites", passport.authenticate('jwt', {session: false}), 
             return;
         }
         else if(req.body.type === "Actors") {
-            query = `SELECT A.primaryName, A.nconst, A.knownForTitles, B.stars as actorStars from (SELECT * from name_basics) A LEFT JOIN (select * from user_liked_actors WHERE uid = '${req.user.uid}') B ON A.nconst = B.nconst WHERE primaryName like "${req.body.term}%" LIMIT ${RETURN_LIMIT}`;
+            query = `SELECT primaryName, nconst, knownForTitles from name_basics WHERE primaryName like "${req.body.term}%" AND (primaryProfession LIKE '%actor%' OR primaryProfession LIKE '%actress%' ) LIMIT ${RETURN_LIMIT}`;
         }
         else if(req.body.type === "Movies") {
-            query = `SELECT A.primarytitle, A.tconst, A.genres, B.uid, B.movieStars FROM (SELECT primarytitle, tconst, genres from title_basics WHERE primarytitle like "${req.body.term}%") A LEFT JOIN (SELECT uid, tconst, stars as movieStars from user_liked_movies WHERE uid = '${req.user.uid}') B ON A.tconst = B.tconst LIMIT ${RETURN_LIMIT}`;
+            query = `SELECT A.primarytitle, A.tconst, A.genres, B.uid FROM (SELECT primarytitle, tconst, genres from title_basics WHERE primarytitle like "${req.body.term}%" AND titleType ="movie") A LEFT JOIN (SELECT uid, tconst from user_liked_movies WHERE uid = 'u000001') B ON A.tconst = B.tconst LIMIT ${RETURN_LIMIT}`;
         }
         else if(req.body.type === "TVShows") {
-            query = `SELECT A.primarytitle, A.tconst, A.genres, B.uid, B.movieStars FROM (SELECT primarytitle, tconst, genres from title_basics WHERE primarytitle like "${req.body.term}%" AND titleType in ('tvepisode', 'tvseries')) A LEFT JOIN (SELECT uid, tconst, stars as movieStars from user_liked_movies WHERE uid = '${req.user.uid}') B ON A.tconst = B.tconst LIMIT ${RETURN_LIMIT}`;
+            query = `SELECT A.primarytitle, A.tconst, A.genres, B.uid FROM (SELECT primarytitle, tconst, genres from title_basics WHERE primarytitle like "${req.body.term}%" AND titleType in ('tvepisode', 'tvseries')) A LEFT JOIN (SELECT uid, tconst from user_liked_movies WHERE uid = 'u000001') B ON A.tconst = B.tconst LIMIT ${RETURN_LIMIT}`;
         }
         else if(req.body.type === "Directors") {
-            query = `SELECT A.primaryName, A.nconst, A.knownForTitles, B.stars as actorStars from (SELECT * from name_basics) A LEFT JOIN (select * from user_liked_actors WHERE uid = '${req.user.uid}') B ON A.nconst = B.nconst WHERE primaryName like "${req.body.term}%" AND primaryProfession LIKE '%director%' LIMIT ${RETURN_LIMIT}`;
+            query = `SELECT primaryName, nconst, knownForTitles from name_basics WHERE primaryName like "${req.body.term}%" AND primaryProfession LIKE '%director%' LIMIT ${RETURN_LIMIT}`;
         }
         // SQL QUERY HERE
         mysql.query(query, function (err, result) {
