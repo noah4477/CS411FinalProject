@@ -3,8 +3,8 @@ import AliceCarousel from 'react-alice-carousel'
 import 'react-alice-carousel/lib/alice-carousel.css'
 import AltImg from './Movie_Not_Found.png' 
 import Axios from 'axios'
-import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
-import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
+// import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
+// import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
 import { withRouter } from 'react-router-dom';
  
 class Gallery extends React.Component {

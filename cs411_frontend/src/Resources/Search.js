@@ -41,7 +41,9 @@ class SearchPage extends React.Component {
     
     constructor(props) {
         super(props);
-        this.state = { searchData: { crew: [], titles: [] } };
+        this.state = { searchData: { crew: [], titles: [] },
+          moviesInfoObj : []
+       };
         this.getParam = this.getParam.bind(this);
         this.getMovies = this.getMovies.bind(this);
     }
@@ -59,7 +61,7 @@ class SearchPage extends React.Component {
                         console.log("Error in getting search data");
                     }
                     else 
-                    {
+                    {     
                         this.setState({ searchData: data });
                     }
                 });
@@ -73,10 +75,11 @@ class SearchPage extends React.Component {
                   console.log("Error in getting search data");
               }
               else 
-              {
+              {   
                   this.setState({ searchData: data });
               }
           });
+          
     }
     componentWillUnmount() {
         this.unlisten();

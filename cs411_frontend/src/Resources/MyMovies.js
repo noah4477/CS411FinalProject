@@ -1,7 +1,6 @@
 import React from 'react';
 import Header from './Header';
 import { withRouter } from 'react-router-dom';
-import queryString from 'query-string'
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -10,7 +9,7 @@ import { fade, withStyles,createMuiTheme  } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import { postRequest } from './Request';
-import Button from '@material-ui/core/Button';
+import Axios from 'axios'
 
 const theme = createMuiTheme({
     palette: {
@@ -40,13 +39,16 @@ class MyMovies extends React.Component {
     
     constructor(props) {
         super(props);
-        this.state = { movies: [] };
-        this.getMovies = this.getMovies.bind(this);
-        this.unlikeMovie = this.unlikeMovie.bind(this);
+        this.state = {
+           movies: [],
+           moviesInfoObj : []
+         };
+         this.getMovies = this.getMovies.bind(this)
     }
 
-    componentWillMount() {
-        postRequest("http://localhost:8000/api/getMyFavorites", { uid: 'u000001' })
+    async componentWillMount() {
+      
+        await postRequest("http://localhost:8000/api/getFavoriteMovies")
         .then(data => data.json())
         .then((data) => {
             if(data.error)
@@ -54,46 +56,49 @@ class MyMovies extends React.Component {
                 console.log("Error in getting search data");
             }
             else 
-            {
-               this.setState({movies: data.result});
+            { 
+               this.setState({movies : data.favoriteMovies});
             }
-        });
+        })
+        
+        let movieInfo = [] , promises =[], movies = this.state.movies;
+        
+        for (let i = 0; i< this.state.movies.length ; i ++){
+            const promise =  Axios.get(`https://api.themoviedb.org/3/find/${this.state.movies[i].tconst}?api_key=0bd4af129149c95eb2534f872838d4a9&language=en-US&external_source=imdb_id`)
+            promises.push(promise)
+        }
+        
+        Axios.all(promises)
+          .then((response) =>{
+            for (let i=0; i < this.state.movies.length ; i++){
+                  let info = response[i].data;
+                  info = info.movie_results[0] || info.tv_results[0];
+                  if (info){
+                    info.id = this.state.movies[i].tconst
+                    info.rating = this.state.movies[i].stars
+                    movieInfo.push(info);
+                }
+              }
+              this.setState({moviesInfoObj : movieInfo})
+        })
     }
-    componentWillUnmount() {
   
-    }
 
-    unlikeMovie(tconst)
-    {
-        postRequest('http://localhost:8000/api/movieUnlike', {movie: tconst} )
-        .then((data) => data.json())
-        .then((data) => {
-            if(data.error)
-            {
-                console.log("Error in getting search data");
-            }
-            else 
-            {
-                this.setState({ movies: this.state.movies.filter(movie => movie.tconst != tconst) });
-            }
-        });
-    }
+    
 
     getMovies() {
-        const { classes } = this.props;
         return (
-            <List className={classes.root} style={{ maxWidth: 'unset', maxHeight: 'calc(100vh - 144px)'}} subheader={<li />}>
-            {((this.state.movies === undefined || this.state.movies === [])) && (<Typography>No Results</Typography>)}
-            {(this.state.movies || []).map(movie => (
-                <li key={`section-${movie.tconst}`} className={classes.listSection}>
-                <ul className={classes.ul}>
-                    <ListItem key={`Movie-${movie.tconst}` }>
-                        <ListItemText primary={`Movie: ${movie.primaryTitle}`} />
-                        <Button onClick={() => { this.unlikeMovie(movie.tconst) }} > {"Unlike"} </Button>
-                    </ListItem>
-                </ul>
-                </li>
-            ))}
+            <List  style={{ maxWidth: 'unset', maxHeight: 'calc(100vh - 144px)'}} subheader={<li />}>
+             {(!this.state.moviesInfoObj.length) ? <Typography>No Results</Typography> : <></>}
+             {(this.state.moviesInfoObj || []).map((movie,) => (
+                 <li key={`section-${movie.id}`} >
+                 <ul >
+                     <ListItem key={`Movie-${movie.id}` }>
+                         <ListItemText primary={`Movie: ${movie.title}`} />
+                     </ListItem>
+                 </ul>
+                 </li>
+             ))}
             </List>
         );
     }
@@ -111,3 +116,4 @@ class MyMovies extends React.Component {
 }
 
 export default withStyles(style)(withRouter(MyMovies));
+

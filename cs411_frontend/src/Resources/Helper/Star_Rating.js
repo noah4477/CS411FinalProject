@@ -1,6 +1,6 @@
 import {FaStar} from 'react-icons/fa'
 import React from 'react'
-import {getRequest, postRequest} from '../Request'
+import { postRequest} from '../Request'
 import CloseIcon from '@material-ui/icons/Close';
 
 
