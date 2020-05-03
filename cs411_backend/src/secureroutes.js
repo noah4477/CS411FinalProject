@@ -7,14 +7,31 @@ module.exports = function(app) {
         return res.json({user: {username: req.user.username, uid: req.user.uid}});
     });
 
-    app.post("/api/getMyFavorites", passport.authenticate('jwt', {session: false}), function(req, res) {
-        var query = `SELECT B.primaryTitle, A.uid, B.tconst FROM (SELECT tconst, uid FROM user_liked_movies WHERE uid = '${req.user.uid}') A LEFT JOIN (SELECT tconst, primaryTitle FROM title_basics) B ON A.tconst = B.tconst`;
+    app.post("/api/getFavoriteMovies", passport.authenticate('jwt', {session: false}), function(req, res) {
+        var query = `
+        SELECT tconst, stars
+        FROM user_liked_movies
+        WHERE uid = "${req.user.uid}"
+        `;
 
         mysql.query(query, function (err, result) {
             if (err) throw err;
-            return res.json({result: result});
+            return res.json({favoriteMovies: result});
         });
-    })
+    });
+
+    app.post("/api/getFavoriteActors", passport.authenticate('jwt', {session: false}), function(req, res) {
+        var query = `
+        SELECT nconst, stars
+        FROM user_liked_actors
+        WHERE uid = "${req.user.uid}"
+        `;
+
+        mysql.query(query, function (err, result) {
+            if (err) throw err;
+            return res.json({favoriteActors: result});
+        });
+    });
 
     app.post("/api/getRatingInfo", passport.authenticate('jwt', {session: false}), function(req, res) {
         let query = `
