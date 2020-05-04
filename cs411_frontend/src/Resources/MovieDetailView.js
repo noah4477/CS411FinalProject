@@ -98,7 +98,7 @@ class MovieDetailView extends React.Component{
           { 
             let actorlist = [], dirlist = [], info_ID = {}
             data.forEach((item) => {
-              if (item.category === 'actor')
+              if (item.category === 'actor' || item.category === 'actress')
                 actorlist.push(item.primaryName)
               else if (item.category === 'director')
                 dirlist.push(item.primaryName)
