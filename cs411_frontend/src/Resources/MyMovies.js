@@ -206,11 +206,15 @@ class MyMovies extends React.Component {
                 <Header />
                 <div style = {{display : 'flex' , width : '70%', margin : 'auto'}} >
                   <div style = {{ width : '50%'}} >
-                      {"Liked Movies"}
+                    <h2 style={{textAlign: 'center'}}>
+                      Liked Movies
+                    </h2>
                       {this.getMovies()}
                   </div>
                   <div style = {{ width : '50%'}}>
-                      {"Liked Crew"}
+                    <h2 style={{textAlign: 'center'}}>
+                      Liked Crew
+                    </h2>
                       {this.getCrew()}
                   </div>
                 </div>

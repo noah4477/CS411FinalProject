@@ -89,9 +89,15 @@ class LandingPage extends React.Component {
       <div>
         <Header />
         <div style ={{padding : "70px 0px 0px 0px"}}>
-        {"Recommendations By Actors"}<br/>
+        <h2 style={{textAlign: "center"}}>
+          Recommendations By Actors
+          </h2>
+        <br/>
           {aCarousel}
-        {"Recommendations By Movies"}<br/>
+        <h2 style={{textAlign: 'center'}}>
+          Recommendations By Movies
+          </h2>
+          <br/>
             {mCarousel}
         
         </div>
