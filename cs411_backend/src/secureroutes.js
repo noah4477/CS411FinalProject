@@ -1,33 +1,35 @@
-const RETURN_LIMIT = 25;
-const { mysql, neo4j } = require('./db.js');
+const RETURN_LIMIT = 50;
+const { mysql } = require('./db.js');
 const passport = require('passport');
 
 module.exports = function(app) {
-app.get("/api/isLoggedIn", passport.authenticate('jwt', {session: false}), function(req, res) {
-    return res.json({user: {username: req.user.username}});
-});
+    app.get("/api/isLoggedIn", passport.authenticate('jwt', {session: false}), function(req, res) {
+        return res.json({user: {username: req.user.username, uid: req.user.uid}});
+    });
 
-app.post("/api/getMyFavorites", passport.authenticate('jwt', {session: false}), function(req, res) {
-        var query = `SELECT B.primaryTitle, A.uid, B.tconst FROM (SELECT tconst, uid FROM user_liked_movies WHERE uid = '${req.body.uid}') A LEFT JOIN (SELECT tconst, primaryTitle FROM title_basics) B ON A.tconst = B.tconst`;
+    app.post("/api/getFavoriteMovies", passport.authenticate('jwt', {session: false}), function(req, res) {
+        var query = `
+        SELECT tconst, stars
+        FROM user_liked_movies
+        WHERE uid = "${req.user.uid}"
+        `;
 
         mysql.query(query, function (err, result) {
             if (err) throw err;
-            return res.json({result: result});
-        });
-    })
-
-    app.post("/api/movieLike", passport.authenticate('jwt', {session: false}), function(req, res) {
-        var query = `INSERT IGNORE INTO user_liked_movies(uid, tconst) VALUES ('u000001', '${req.body.movie}')`;
-        mysql.query(query, function (err, result) {
-            if (err) throw err;
-            return res.json({result: result});
+            return res.json({favoriteMovies: result});
         });
     });
-    app.post("/api/movieUnlike", passport.authenticate('jwt', {session: false}), function(req, res) {
-        var query = `DELETE FROM user_liked_movies WHERE uid = 'u000001' AND tconst = "${req.body.movie}"`;
+
+    app.post("/api/getFavoriteActors", passport.authenticate('jwt', {session: false}), function(req, res) {
+        var query = `
+        SELECT nconst, stars
+        FROM user_liked_actors
+        WHERE uid = "${req.user.uid}"
+        `;
+
         mysql.query(query, function (err, result) {
             if (err) throw err;
-            return res.json({result: result});
+            return res.json({favoriteActors: result});
         });
     });
 
@@ -111,12 +113,81 @@ app.post("/api/getMyFavorites", passport.authenticate('jwt', {session: false}), 
         });
     });
 
+    app.post("/api/updateStarRating", passport.authenticate('jwt', {session: false}), function(req, res) {
+        let id = req.body.id;
+        let rating = req.body.rating;
+        let type = req.body.type;
+        let id_type = (type == "movie") ? "tconst" : "nconst"
+        let table_name = (type == "movie") ?
+         "user_liked_movies" : "user_liked_actors"
+        let query = ``;
+        if (rating){
+            query = `
+            INSERT INTO ${table_name} (uid, ${id_type}, stars)
+            VALUES ('${req.user.uid}', '${id}', '${rating}')
+            ON DUPLICATE KEY UPDATE
+                stars = '${rating}'
+            `;
+        } else {
+            query = `
+            DELETE FROM ${table_name}
+            WHERE uid = "${req.user.uid}" AND ${id_type} = "${id}" 
+            `;
+        }
+
+        mysql.query(query, function (err, result) {
+            if (err) throw err;
+            return res.json({result: result});
+        });
+    });
+
+    app.post("/api/getStarRating", passport.authenticate('jwt', {session: false}), function(req, res) {
+        let id = req.body.id;
+        let type = req.body.type;
+        let id_type = (type == "movie") ? "tconst" : "nconst";
+        let table_name = (type == "movie") ?
+         "user_liked_movies" : "user_liked_actors"
+        let query = `
+        SELECT stars
+        FROM ${table_name}
+        WHERE uid = "${req.user.uid}" AND ${id_type} = "${id}" 
+        `;
+        mysql.query(query, function (err, result) {
+            if (err) throw err;
+            if (result != null && result[0] != null) {
+                return res.json({rating: result[0].stars});
+            } else {
+                return res.json({rating: null})
+            }
+        });
+    });
+
+    app.post("/api/getRecsByActor", passport.authenticate('jwt', {session: false}), function(req, res) {
+        let query = `
+        CALL recommend_actor("${req.user.uid}")
+        `;
+        mysql.query(query, function (err, result) {
+            if (err) throw err;
+            return res.json({topMovies: result});
+        });
+    });
+
+    app.post("/api/getRecsByMovie", passport.authenticate('jwt', {session: false}), function(req, res) {
+        let query = `
+        CALL recommend_movie("${req.user.uid}")
+        `;
+        mysql.query(query, function (err, result) {
+            if (err) throw err;
+            return res.json({topMovies: result});
+        });
+    });
+
     app.post("/api/search", passport.authenticate('jwt', {session: false}), function(req, res) {
         var query = "";
 
         if(req.body.type === "ALL")
         {
-            query = `SELECT A.primarytitle, A.tconst, A.genres, B.uid FROM (SELECT primarytitle, tconst, genres from title_basics WHERE primarytitle like "${req.body.term}%") A LEFT JOIN (SELECT uid, tconst from user_liked_movies WHERE uid = 'u000001') B ON A.tconst = B.tconst LIMIT ${RETURN_LIMIT}`;
+            query = `SELECT A.primarytitle, A.tconst, A.genres FROM (SELECT primarytitle, tconst, genres from title_basics WHERE primarytitle like "${req.body.term}%") A LEFT JOIN (SELECT averageRating, numVotes, tconst from title_ratings) B ON A.tconst = B.tconst ORDER BY B.numVotes DESC LIMIT ${RETURN_LIMIT}`;
             mysql.query(query, function (err, result1) {
                 if (err) throw err;
                 query = `SELECT primaryName, nconst, knownForTitles from name_basics WHERE primaryName like "${req.body.term}%" LIMIT ${RETURN_LIMIT}`;
@@ -131,10 +202,10 @@ app.post("/api/getMyFavorites", passport.authenticate('jwt', {session: false}), 
             query = `SELECT primaryName, nconst, knownForTitles from name_basics WHERE primaryName like "${req.body.term}%" AND (primaryProfession LIKE '%actor%' OR primaryProfession LIKE '%actress%' ) LIMIT ${RETURN_LIMIT}`;
         }
         else if(req.body.type === "Movies") {
-            query = `SELECT A.primarytitle, A.tconst, A.genres, B.uid FROM (SELECT primarytitle, tconst, genres from title_basics WHERE primarytitle like "${req.body.term}%" AND titleType ="movie") A LEFT JOIN (SELECT uid, tconst from user_liked_movies WHERE uid = 'u000001') B ON A.tconst = B.tconst LIMIT ${RETURN_LIMIT}`;
+            query = `SELECT A.primarytitle, A.tconst, A.genres FROM (SELECT primarytitle, tconst, genres from title_basics WHERE primarytitle like "${req.body.term}%") A LEFT JOIN (SELECT averageRating, numVotes, tconst from title_ratings) B ON A.tconst = B.tconst ORDER BY B.numVotes DESC LIMIT ${RETURN_LIMIT}`;
         }
         else if(req.body.type === "TVShows") {
-            query = `SELECT A.primarytitle, A.tconst, A.genres, B.uid FROM (SELECT primarytitle, tconst, genres from title_basics WHERE primarytitle like "${req.body.term}%" AND titleType in ('tvepisode', 'tvseries')) A LEFT JOIN (SELECT uid, tconst from user_liked_movies WHERE uid = 'u000001') B ON A.tconst = B.tconst LIMIT ${RETURN_LIMIT}`;
+            query = `SELECT A.primarytitle, A.tconst, A.genres FROM (SELECT primarytitle, tconst, genres from title_basics WHERE primarytitle like "${req.body.term}%" AND titleType in ('tvepisode', 'tvseries')) A LEFT JOIN (SELECT averageRating, numVotes, tconst from title_ratings) B ON A.tconst = B.tconst ORDER BY B.numVotes DESC LIMIT ${RETURN_LIMIT}`;
         }
         else if(req.body.type === "Directors") {
             query = `SELECT primaryName, nconst, knownForTitles from name_basics WHERE primaryName like "${req.body.term}%" AND primaryProfession LIKE '%director%' LIMIT ${RETURN_LIMIT}`;
