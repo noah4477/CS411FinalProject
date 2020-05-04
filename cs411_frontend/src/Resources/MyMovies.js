@@ -148,8 +148,8 @@ class MyMovies extends React.Component {
                  <li key={`section-${movie.id}`} style = {{marginTop : '12px' , backgroundColor : 'grey'}}>
                  <ul style = {{padding : '30px'}} >
                  
-                      <div style = {{display : 'flex' , justifyContent : 'space-between' , width : '100%'}}>
-                        <div style = {{ maxWidth : '150px'}} onClick = { () => this.props.history.push("/crewDetailView?name=null"+"&id=" + movie.id  )  }>
+                      <div style = {{display : 'flex' , justifyContent : 'space-between' , width : '100%' }}>
+                        <div style = {{ maxWidth : '150px', paddingTop :'10px'}} onClick = { () => this.props.history.push("/crewDetailView?name=null"+"&id=" + movie.id  )  }>
                           <img style = {{width:'100%'}} src = {url+movie.profile_path || AltImg} />
                         </div>
                         <div style = {{width : '200px' , verticalAlign: 'middle'}}>

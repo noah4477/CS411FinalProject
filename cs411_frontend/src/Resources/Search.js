@@ -14,6 +14,8 @@ import Button from '@material-ui/core/Button';
 import {Star_Rating} from './Helper/Star_Rating.js'
 import Axios from 'axios'
 
+import AltImg from './Helper/Movie_Not_Found.png'
+
 
 const theme = createMuiTheme({
     palette: {
@@ -110,7 +112,7 @@ class SearchPage extends React.Component {
                   movieInfo.push(result);
               }
             }
-            this.setState({moviesInfoObj : movieInfo})
+            this.setState({moviesInfoObj : movieInfo.slice(0,15)})
             // console.log("Movie Results are : \n " , movieInfo)
       })
     }
@@ -131,7 +133,7 @@ class SearchPage extends React.Component {
                   crewInfo.push(result);
               }
             }
-            this.setState({crewInfoObj : crewInfo})
+            this.setState({crewInfoObj : crewInfo.slice(0,15)})
             // console.log("Crew Results are : \n " , crewInfo)
       })
       
@@ -145,27 +147,51 @@ class SearchPage extends React.Component {
         return {term: values.term, type: values.type };
     }
     getMovies() {
+        let url = "https://image.tmdb.org/t/p/original";
         const { classes } = this.props;
+        console.log(this.state.crewInfoObj)
         return (
             <List className={classes.root} style={{ maxWidth: 'unset', maxHeight: 'calc(100vh - 144px)'}} subheader={<li />} >
-            {(this.state.searchData == undefined || (this.state.searchData.titles == [] && this.state.searchData.crew == [])) && (<Typography>No Results</Typography>)}
-            {(this.state.searchData && this.state.searchData.titles || []).map((movie) => (
-                <li key={`section-${movie.tconst}`} className={classes.listSection}>
+            {(this.state.moviesInfoObj == undefined || (this.state.moviesInfoObj == [] && this.state.crewInfoObj == [])) && (<Typography>No Results</Typography>)}
+            {'MOVIES'}
+            {(this.state.moviesInfoObj && this.state.moviesInfoObj || []).map((movie) => (
+                <li key={`section-${movie.tconst}`} className={classes.listSection} style = {{marginTop : '12px' , backgroundColor : 'grey'}}>
                 <ul className={classes.ul}>
+                  <div style = {{display : 'flex' , justifyContent : 'space-between' , width : '100%'}}>
+                    <div style = {{ maxWidth : '150px'}} onClick = { () => this.props.history.push("/movieDetailView?title=null"+"&mID=" + movie.tconst  )  }>
+                      <img style = {{width:'100%'}} src = {(movie.poster_path) ? url+movie.poster_path : AltImg} />
+                    </div>
+                    
+                    <div style = {{width : '200px' , verticalAlign: 'middle'}}>
+                      <Star_Rating id={movie.tconst} type = {'movie'}/>
+                    </div>
+                  </div>
+                  
                     <ListItem key={`Movie-${movie.tconst}`}  >
-                        <ListItemText primary={`Movie: ${movie.primarytitle}`} onClick= {() => this.props.history.push("/movieDetailView?title="+movie.primarytitle+"&mID=" + movie.tconst  )}/>
-                        <Star_Rating id={movie.tconst} type = {'movie'}/>
-                      </ListItem>
+                        <ListItemText primary={` ${movie.title}`} />
+                    </ListItem>
                 </ul>
                 </li>
-            ))}
-            {(this.state.searchData && this.state.searchData.crew || []).map((crew) => (
-                <li key={`section-${crew.nconst}`} className={classes.listSection}>
+            ))}<br/>
+            
+            {'CREW'}
+            {(this.state.crewInfoObj && this.state.crewInfoObj || []).map((crew) => (
+                <li key={`section-${crew.nconst}`} className={classes.listSection} style = {{marginTop : '12px' , backgroundColor : 'grey'}}>
                 <ul className={classes.ul}>
-                    <ListItem key={`Crew-${crew.primaryName}` }>
-                        <ListItemText primary={`Crew: ${crew.primaryName}`} onClick={() => {this.props.history.push('/crewDetailView?id=' +crew.nconst + "&name=" + crew.primaryName) }} />
-                        <Star_Rating id={crew.nconst} type = {'actor'} />
+                <div style = {{display : 'flex' , justifyContent : 'space-between' , width : '100%'}}>
+                  <div style = {{ maxWidth : '150px'}} onClick={() => {this.props.history.push('/crewDetailView?id=' +crew.nconst + "&name=" + crew.name) }}>
+                    <img style = {{width:'100%'}} src = {(crew.profile_path) ?url+crew.profile_path : AltImg} />
+                  </div>
+                
+                  <div style = {{width : '200px' , verticalAlign: 'middle'}}>
+                    <Star_Rating id={crew.nconst} type = {'actor'}/>
+                  </div>
+                  </div>
+                
+                    <ListItem key={`Crew-${crew.name}` }>
+                        <ListItemText primary={`${crew.name}`}  />
                     </ListItem>
+                    
                 </ul>
                 </li>
             ))}
