@@ -3,8 +3,8 @@ import AliceCarousel from 'react-alice-carousel'
 import 'react-alice-carousel/lib/alice-carousel.css'
 import AltImg from './Movie_Not_Found.png' 
 import Axios from 'axios'
-
 import { withRouter } from 'react-router-dom';
+
  
 class Gallery extends React.Component {
   constructor (props){
@@ -13,14 +13,14 @@ class Gallery extends React.Component {
       IDs : this.props.Ids,
       galleryItems: Array(this.props.Ids.length).fill(AltImg).map((image,i) => <img key={i} src = {image} />)
   }
-  
-  
+
 }
  
   responsive = {
     200: { items: 1 },
     560: { items: 3 },
     760: { items:  4},
+
     950: { items:  6},
   }
  
@@ -44,6 +44,7 @@ class Gallery extends React.Component {
     
     return (
       <div style ={{padding : "10px 0px 0px 0px", width : "70%" ,margin:'auto'}} >
+
       <AliceCarousel
         
         items={this.state.galleryItems}
