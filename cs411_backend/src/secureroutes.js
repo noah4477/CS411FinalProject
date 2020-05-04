@@ -1,4 +1,4 @@
-const RETURN_LIMIT = 25;
+const RETURN_LIMIT = 50;
 const { mysql } = require('./db.js');
 const passport = require('passport');
 
@@ -219,7 +219,7 @@ module.exports = function(app) {
 
         if(req.body.type === "ALL")
         {
-            query = `SELECT A.primarytitle, A.tconst, A.genres, B.uid FROM (SELECT primarytitle, tconst, genres from title_basics WHERE primarytitle like "${req.body.term}%") A LEFT JOIN (SELECT uid, tconst from user_liked_movies WHERE uid = 'u000001') B ON A.tconst = B.tconst LIMIT ${RETURN_LIMIT}`;
+            query = `SELECT A.primarytitle, A.tconst, A.genres FROM (SELECT primarytitle, tconst, genres from title_basics WHERE primarytitle like "${req.body.term}%") A LEFT JOIN (SELECT averageRating, numVotes, tconst from title_ratings) B ON A.tconst = B.tconst ORDER BY B.numVotes DESC LIMIT ${RETURN_LIMIT}`;
             mysql.query(query, function (err, result1) {
                 if (err) throw err;
                 query = `SELECT primaryName, nconst, knownForTitles from name_basics WHERE primaryName like "${req.body.term}%" LIMIT ${RETURN_LIMIT}`;
@@ -234,10 +234,10 @@ module.exports = function(app) {
             query = `SELECT primaryName, nconst, knownForTitles from name_basics WHERE primaryName like "${req.body.term}%" AND (primaryProfession LIKE '%actor%' OR primaryProfession LIKE '%actress%' ) LIMIT ${RETURN_LIMIT}`;
         }
         else if(req.body.type === "Movies") {
-            query = `SELECT A.primarytitle, A.tconst, A.genres, B.uid FROM (SELECT primarytitle, tconst, genres from title_basics WHERE primarytitle like "${req.body.term}%" AND titleType ="movie") A LEFT JOIN (SELECT uid, tconst from user_liked_movies WHERE uid = 'u000001') B ON A.tconst = B.tconst LIMIT ${RETURN_LIMIT}`;
+            query = `SELECT A.primarytitle, A.tconst, A.genres FROM (SELECT primarytitle, tconst, genres from title_basics WHERE primarytitle like "${req.body.term}%") A LEFT JOIN (SELECT averageRating, numVotes, tconst from title_ratings) B ON A.tconst = B.tconst ORDER BY B.numVotes DESC LIMIT ${RETURN_LIMIT}`;
         }
         else if(req.body.type === "TVShows") {
-            query = `SELECT A.primarytitle, A.tconst, A.genres, B.uid FROM (SELECT primarytitle, tconst, genres from title_basics WHERE primarytitle like "${req.body.term}%" AND titleType in ('tvepisode', 'tvseries')) A LEFT JOIN (SELECT uid, tconst from user_liked_movies WHERE uid = 'u000001') B ON A.tconst = B.tconst LIMIT ${RETURN_LIMIT}`;
+            query = `SELECT A.primarytitle, A.tconst, A.genres FROM (SELECT primarytitle, tconst, genres from title_basics WHERE primarytitle like "${req.body.term}%" AND titleType in ('tvepisode', 'tvseries')) A LEFT JOIN (SELECT averageRating, numVotes, tconst from title_ratings) B ON A.tconst = B.tconst ORDER BY B.numVotes DESC LIMIT ${RETURN_LIMIT}`;
         }
         else if(req.body.type === "Directors") {
             query = `SELECT primaryName, nconst, knownForTitles from name_basics WHERE primaryName like "${req.body.term}%" AND primaryProfession LIKE '%director%' LIMIT ${RETURN_LIMIT}`;
