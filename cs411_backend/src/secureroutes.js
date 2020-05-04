@@ -162,6 +162,44 @@ module.exports = function(app) {
         });
     });
 
+    app.post("/api/getRecsByActor", passport.authenticate('jwt', {session: false}), function(req, res) {
+        let query = `
+        SELECT (A.stars / 5.0) as userRating, B.knownForTitles
+        FROM (SELECT uid, nconst, stars
+            FROM user_liked_actors
+            WHERE uid = "${req.user.uid}") A
+            JOIN 
+            (SELECT nconst, knownForTitles 
+            FROM name_basics) B
+            ON A.nconst = B.nconst
+        `;
+        mysql.query(query, function (err, recsPerActor) {
+            if (err) throw err;
+            effectiveRatings = [];
+            recsPerActor.forEach(function(object){
+                userRating = object.userRating;
+                movieIDs = object.knownForTitles.split(",");
+                for (var i = 0; i < movieIDs.length; i++) {
+                    ID = movieIDs[i];
+                    let ratingQuery = `
+                    SELECT averageRating
+                    FROM title_ratings A
+                    WHERE A.tconst = "${ID}"
+                    `;
+                    mysql.query(ratingQuery, function (err, movieRes) {
+                        movieRating = movieRes.averageRating / 10.0;
+                        effectiveRating = (movieRating * userRating)
+                        effectiveRatings.push({tconst: ID, rating: effectiveRating});
+                    });
+                }
+            });
+            effectiveRatings.sort(function(a, b) {
+                return b.rating - a.rating;
+            });
+            return effectiveRatings.slice(0, 10);
+        });
+    });
+
     app.post("/api/search", passport.authenticate('jwt', {session: false}), function(req, res) {
         var query = "";
 
