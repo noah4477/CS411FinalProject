@@ -8,8 +8,16 @@ import ListSubheader from '@material-ui/core/ListSubheader';
 import { fade, withStyles,createMuiTheme  } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
+
+import Card from '@material-ui/core/Card';
+import CardMedia from '@material-ui/core/CardMedia';
+
 import { postRequest } from './Request';
+
 import Axios from 'axios'
+import AltImg from './Helper/Movie_Not_Found.png'
+import {Star_Rating} from './Helper/Star_Rating.js'
+
 
 const theme = createMuiTheme({
     palette: {
@@ -87,19 +95,36 @@ class MyMovies extends React.Component {
     
 
     getMovies() {
+      // <img src={"https://image.tmdb.org/t/p/original" + movie.profile_path} />
+      // console.log(this.state.moviesInfoObj)
+      let url = "https://image.tmdb.org/t/p/original";
+      
         return (
+            <div style = {{width: '80%', margin : 'auto'}}>
             <List  style={{ maxWidth: 'unset', maxHeight: 'calc(100vh - 144px)'}} subheader={<li />}>
              {(!this.state.moviesInfoObj.length) ? <Typography>No Results</Typography> : <></>}
-             {(this.state.moviesInfoObj || []).map((movie,) => (
-                 <li key={`section-${movie.id}`} >
-                 <ul >
-                     <ListItem key={`Movie-${movie.id}` }>
-                         <ListItemText primary={`Movie: ${movie.title}`} />
-                     </ListItem>
+             {(this.state.moviesInfoObj || []).map((movie,i) => (
+                 <li key={`section-${movie.id}`} style = {{marginTop : '12px' , backgroundColor : 'grey'}}>
+                 <ul style = {{padding : '30px'}} >
+                 
+                      <div style = {{display : 'flex' , justifyContent : 'space-between' , width : '100%'}}>
+                        <div style = {{ maxWidth : '150px'}} onClick = { () => this.props.history.push("/movieDetailView?title=null"+"&mID=" + movie.id  )  }>
+                          <img style = {{width:'100%'}} src = {url+movie.poster_path || AltImg} />
+                        </div>
+                        <div style = {{width : '200px' , }}>
+                            <Star_Rating id={movie.id} type = {'movie'}/>
+                        </div>
+                      </div>
+                      
+                         <ListItem key={`Movie-${movie.id}`   }> 
+                             <ListItemText primary={ `${movie.title}`} />
+                         </ListItem>
+                      
                  </ul>
                  </li>
              ))}
             </List>
+            </div>
         );
     }
     

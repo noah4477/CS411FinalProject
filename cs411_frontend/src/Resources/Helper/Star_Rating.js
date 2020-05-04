@@ -40,8 +40,6 @@ class Star_Rating extends React.Component {
     
     await this.setState({ratingValue: target.value})
     
-    
-    // Make Request to Server Here !!!
     let updateBody = { id : this.props.id, type: this.state.type , rating : target.value };
     
   

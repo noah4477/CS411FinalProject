@@ -44,7 +44,9 @@ class Gallery extends React.Component {
           
           this.setState({galleryItems : moviePosterList.map((image,i) => 
             <div onClick = { () => this.props.history.push("/movieDetailView?title=null"+"&mID=" + this.state.IDs[i]  )  }
-            style = {{textAlign : 'center'}}><img key={i} src = {image} /></div>)
+            style = {{textAlign : 'center' , maxWidth : '160px' }}
+            
+            ><img style = {{width : '100%'}} key={i} src = {image} /></div>)
           })
     })
     // 
@@ -54,7 +56,7 @@ class Gallery extends React.Component {
 
   render() {
     return (
-      <div style ={{padding : "70px 0px 10px 0px", width : "80%" ,margin:'auto'}} >
+      <div style ={{padding : "10px 0px 0px 0px", width : "70%" ,margin:'auto'}} >
       <AliceCarousel
         
         items={this.state.galleryItems}
