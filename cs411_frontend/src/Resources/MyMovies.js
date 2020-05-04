@@ -49,9 +49,12 @@ class MyMovies extends React.Component {
         super(props);
         this.state = {
            movies: [],
-           moviesInfoObj : []
+           moviesInfoObj : [],
+           actors: [],
+           actorsInfoObj : []
          };
          this.getMovies = this.getMovies.bind(this)
+         this.getCrew = this.getCrew.bind(this)
     }
 
     async componentWillMount() {
@@ -66,6 +69,7 @@ class MyMovies extends React.Component {
             else 
             { 
                this.setState({movies : data.favoriteMovies});
+              
             }
         })
         
@@ -89,14 +93,84 @@ class MyMovies extends React.Component {
               }
               this.setState({moviesInfoObj : movieInfo})
         })
+        
+        await postRequest("http://localhost:8000/api/getFavoriteActors")
+        .then(data => data.json())
+        .then((data) => {
+            if(data.error)
+            {
+                console.log("Error in getting search data");
+            }
+            else 
+            { 
+               console.log(data)
+               this.setState({actors : data.favoriteActors});  
+            }
+        })
+        
+        let actorInfo = [] , vromises =[], actors = this.state.actors;
+        
+        for (let i = 0; i< actors.length ; i ++){
+            const promise =  Axios.get(`https://api.themoviedb.org/3/find/${actors[i].nconst}?api_key=0bd4af129149c95eb2534f872838d4a9&language=en-US&external_source=imdb_id`)
+            vromises.push(promise)
+        }
+        
+        Axios.all(vromises)
+          .then((response) =>{
+            for (let i=0; i < actors.length ; i++){
+                  let info = response[i].data;
+                  info = info.person_results[0] ;
+                  if (info){
+                    info.id = actors[i].nconst
+                    info.rating = actors[i].stars
+                    actorInfo.push(info);
+                }
+              }
+              console.log(actorInfo)
+              this.setState({actorsInfoObj : actorInfo})
+        })
+        
+        
+        
+        
     }
   
 
     
 
-    getMovies() {
-      // <img src={"https://image.tmdb.org/t/p/original" + movie.profile_path} />
-      // console.log(this.state.moviesInfoObj)
+    getCrew() {
+  
+      let url = "https://image.tmdb.org/t/p/original";
+      
+        return (
+            <div style = {{width: '80%', margin : 'auto'}}>
+            <List  style={{ maxWidth: 'unset', maxHeight: 'calc(100vh - 144px)'}} subheader={<li />}>
+             {(!this.state.actorsInfoObj.length) ? <Typography>No Results</Typography> : <></>}
+             {(this.state.actorsInfoObj || []).map((movie,i) => (
+                 <li key={`section-${movie.id}`} style = {{marginTop : '12px' , backgroundColor : 'grey'}}>
+                 <ul style = {{padding : '30px'}} >
+                 
+                      <div style = {{display : 'flex' , justifyContent : 'space-between' , width : '100%'}}>
+                        <div style = {{ maxWidth : '150px'}} onClick = { () => this.props.history.push("/crewDetailView?name=null"+"&id=" + movie.id  )  }>
+                          <img style = {{width:'100%'}} src = {url+movie.profile_path || AltImg} />
+                        </div>
+                        <div style = {{width : '200px' , verticalAlign: 'middle'}}>
+                            <Star_Rating id={movie.id} type = {'actor'}/>
+                        </div>
+                      </div>
+                      
+                         <ListItem key={`Movie-${movie.id}`   }> 
+                             <ListItemText primary={ `${movie.name}`} />
+                         </ListItem>
+                 </ul>
+                 </li>
+             ))}
+            </List>
+            </div>
+        );
+    }
+    
+    getMovies(){
       let url = "https://image.tmdb.org/t/p/original";
       
         return (
@@ -111,7 +185,7 @@ class MyMovies extends React.Component {
                         <div style = {{ maxWidth : '150px'}} onClick = { () => this.props.history.push("/movieDetailView?title=null"+"&mID=" + movie.id  )  }>
                           <img style = {{width:'100%'}} src = {url+movie.poster_path || AltImg} />
                         </div>
-                        <div style = {{width : '200px' , }}>
+                        <div style = {{width : '200px' , verticalAlign: 'middle'}}>
                             <Star_Rating id={movie.id} type = {'movie'}/>
                         </div>
                       </div>
@@ -119,7 +193,6 @@ class MyMovies extends React.Component {
                          <ListItem key={`Movie-${movie.id}`   }> 
                              <ListItemText primary={ `${movie.title}`} />
                          </ListItem>
-                      
                  </ul>
                  </li>
              ))}
@@ -128,14 +201,22 @@ class MyMovies extends React.Component {
         );
     }
     
+    
     render() {
         return (
-            <div>
+            <>
                 <Header />
-                <div>
-                    {this.getMovies()}
+                <div style = {{display : 'flex' , width : '70%', margin : 'auto'}} >
+                  <div style = {{ width : '50%'}} >
+                      {"Liked Movies"}
+                      {this.getMovies()}
+                  </div>
+                  <div style = {{ width : '50%'}}>
+                      {"Liked Crew"}
+                      {this.getCrew()}
+                  </div>
                 </div>
-            </div>
+            </>
         );
     }
 }

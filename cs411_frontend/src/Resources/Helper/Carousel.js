@@ -40,7 +40,6 @@ class Gallery extends React.Component {
     }
     
   
-
   render() {
     
     return (
@@ -49,7 +48,7 @@ class Gallery extends React.Component {
         
         items={this.state.galleryItems}
         responsive={this.responsive}
-        autoPlayInterval={500*this.props.speed}
+        autoPlayInterval={400*this.props.speed}
         autoPlayDirection="rtl"
         autoPlay={true}
         fadeOutAnimation={true}
