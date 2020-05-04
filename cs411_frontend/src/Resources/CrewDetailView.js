@@ -8,6 +8,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import Axios from 'axios'
 import AltImg from './Helper/Movie_Not_Found.png'
 import Cookies from 'js-cookie';
+import {Star_Rating} from './Helper/Star_Rating.js'
 
 const style2 = {
   marginTop: '34px',
@@ -74,7 +75,9 @@ class CrewDetailView extends React.Component{
          console.log("Error in getting search data");
      }
      else {
+       let name = data.person_results ? (data.person_results[0]) ? data.person_results[0].name : this.state.name : this.state.name
        this.setState({crewInfo : data.person_results})
+       this.setState({name : name })
      }
  });
   
@@ -122,6 +125,7 @@ class CrewDetailView extends React.Component{
   }
   
   render(){
+    const crew =  QueryString.parse(this.props.location.search)
     let crewInfo = this.state.crewInfo;
     let details = crewInfo ? (crewInfo.length ? crewInfo[0] : 0) : undefined
     let imgURL = (details && details.profile_path) ? "https://image.tmdb.org/t/p/w200/" + details.profile_path  : AltImg
@@ -134,6 +138,10 @@ class CrewDetailView extends React.Component{
           <div style = {style2} >
             <div>
               <img src = {imgURL}  alt ='Bag'/>
+            </div>
+            <br/>
+            <div style ={{minWidth:'200px', alignItemsL :'center'}}>
+              <Star_Rating id={crew.id} type = {'actor'}/>
             </div>
             <div style = {style3}>
               <div><br/>

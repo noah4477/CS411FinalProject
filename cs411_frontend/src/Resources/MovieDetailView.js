@@ -7,6 +7,8 @@ import { getRequest, postRequest } from './Request';
 import PersonList from './Helper/PersonList.js'
 import AltImg from './Helper/Movie_Not_Found.png'
 import CloseIcon from '@material-ui/icons/Close';
+import {Star_Rating} from './Helper/Star_Rating.js'
+
 
 
 const style2 = {
@@ -29,7 +31,7 @@ const style3 =  {
 
 
 const style1 = {
-  width: '80%',
+  width: '90%',
   backgroundColor:  '#d0d7d9',
   padding: '15px',
   margin: 'auto',
@@ -97,7 +99,7 @@ class MovieDetailView extends React.Component{
           { 
             let actorlist = [], dirlist = [], info_ID = {}
             data.forEach((item) => {
-              if (item.category === 'actor')
+              if (item.category === 'actor' || item.category === 'actress')
                 actorlist.push(item.primaryName)
               else if (item.category === 'director')
                 dirlist.push(item.primaryName)
@@ -116,10 +118,11 @@ class MovieDetailView extends React.Component{
 
 
   render(){ 
+      const movie = QueryString.parse(this.props.location.search)
       let movieInfo = this.state.movieInfo;
       let details = movieInfo ? (movieInfo.movie_results.length ? movieInfo.movie_results : (movieInfo.tv_results.length ? movieInfo.tv_results : 0 ) ) : 0; 
       let imgURL = (details && details[0].poster_path) ? "https://image.tmdb.org/t/p/w200/" + details[0].poster_path  : AltImg
-      let title =   this.state.title// (details.length) ? details[0].title : "Not Available"
+      let title =   (details.length) ? details[0].title : this.state.title
       let overview =   (details.length) ? details[0].overview : "-"
       let release_date =   (details.length) ? details[0].release_date : "-"
       return (
@@ -132,6 +135,10 @@ class MovieDetailView extends React.Component{
                   <div style = {style2}  >
                     <div>
                       <img src = {imgURL}  alt ='Bag'/>
+                    </div>
+                    <br/>
+                    <div style ={{minWidth:'200px', alignItemsL :'center'}}>
+                      <Star_Rating id={movie.mID} type = {'movie'}/>
                     </div>
                     <div style = {style3}>
                       <div style={{width:"85%" , textAlign : 'center'}}>
