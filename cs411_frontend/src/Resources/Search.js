@@ -70,7 +70,9 @@ class SearchPage extends React.Component {
                     }
                     else 
                     {     
-                        this.setState({ searchData: data });
+                        if (data.titles) this.refineMoviesData(data.titles);
+                        if (data.crew) this.refineCrewData(data.crew);
+                          this.setState({ searchData: data });
                     }
                 });
             }
