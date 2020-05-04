@@ -103,7 +103,6 @@ class MyMovies extends React.Component {
             }
             else 
             { 
-               console.log(data)
                this.setState({actors : data.favoriteActors});  
             }
         })
@@ -126,7 +125,6 @@ class MyMovies extends React.Component {
                     actorInfo.push(info);
                 }
               }
-              console.log(actorInfo)
               this.setState({actorsInfoObj : actorInfo})
         })
         
