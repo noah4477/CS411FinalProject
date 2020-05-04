@@ -89,9 +89,9 @@ class LandingPage extends React.Component {
       <div>
         <Header />
         <div style ={{padding : "70px 0px 0px 0px"}}>
-        {"By Actors"}<br/>
+        {"Recommendations By Actors"}<br/>
           {aCarousel}
-        {"By Movies"}<br/>
+        {"Recommendations By Movies"}<br/>
             {mCarousel}
         
         </div>
