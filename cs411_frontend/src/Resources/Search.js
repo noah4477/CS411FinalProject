@@ -12,6 +12,7 @@ import Divider from '@material-ui/core/Divider';
 import { postRequest } from './Request';
 import Button from '@material-ui/core/Button';
 import {Star_Rating} from './Helper/Star_Rating.js'
+import Axios from 'axios'
 
 const theme = createMuiTheme({
     palette: {
@@ -42,10 +43,15 @@ class SearchPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = { searchData: { crew: [], titles: [] },
-          moviesInfoObj : []
+          moviesInfoObj : [],
+          crewInfoObj : []
        };
         this.getParam = this.getParam.bind(this);
         this.getMovies = this.getMovies.bind(this);
+        
+        this.refineMoviesData = this.refineMoviesData.bind(this);
+        this.refineCrewData = this.refineCrewData.bind(this);
+        
     }
 
     componentWillMount() {
@@ -61,7 +67,7 @@ class SearchPage extends React.Component {
                         console.log("Error in getting search data");
                     }
                     else 
-                    {     
+                    {   
                         this.setState({ searchData: data });
                     }
                 });
@@ -76,16 +82,68 @@ class SearchPage extends React.Component {
               }
               else 
               {   
+                  if (data.titles) this.refineMoviesData(data.titles)
+                  if (data.crew) this.refineCrewData(data.crew)
+                  
                   this.setState({ searchData: data });
               }
           });
           
     }
+    
+    refineMoviesData(info){
+      let movieInfo = [] , promises =[];
+      
+      for (let i = 0; i< info.length ; i ++){
+          const promise =  Axios.get(`https://api.themoviedb.org/3/find/${info[i].tconst}?api_key=0bd4af129149c95eb2534f872838d4a9&language=en-US&external_source=imdb_id`)
+          promises.push(promise)
+      }
+      Axios.all(promises)
+        .then((response) =>{
+          for (let i=0; i < info.length ; i++){
+                let result = response[i].data;
+                result = result.movie_results[0] || result.tv_results[0];
+                if (result){
+                  result.tconst = info[i].tconst
+                  movieInfo.push(result);
+              }
+            }
+            this.setState({moviesInfoObj : movieInfo})
+            console.log("Movie Results are : \n " , movieInfo)
+      })
+    }
+    
+    refineCrewData(info){
+      let crewInfo = [] , promises =[];
+      for (let i = 0; i< info.length ; i ++){
+          const promise =  Axios.get(`https://api.themoviedb.org/3/find/${info[i].nconst}?api_key=0bd4af129149c95eb2534f872838d4a9&language=en-US&external_source=imdb_id`)
+          promises.push(promise)
+      }
+      Axios.all(promises)
+        .then((response) =>{
+          for (let i=0; i < info.length ; i++){
+                let result = response[i].data;
+                result = result.person_results[0]
+                if (result){
+                  result.nconst = info[i].nconst
+                  crewInfo.push(result);
+              }
+            }
+            this.setState({crewInfoObj : crewInfo})
+            console.log("Crew Results are : \n " , crewInfo)
+      })
+      
+    }
+    
+    
+    
+    
     componentWillUnmount() {
         this.unlisten();
     }
 
 
+// crewInfoObj & moviesInfoObj
 
     getParam()
     {
